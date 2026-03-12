@@ -1,0 +1,67 @@
+.category-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.cat-btn {
+  padding: 8px 22px;
+  border-radius: 25px;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--text-gray);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.cat-btn:hover,
+.cat-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.magazines-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.mag-card { cursor: pointer; }
+
+.mag-thumbnail {
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.mag-category-badge {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.mag-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .magazines-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 580px) {
+  .magazines-grid { grid-template-columns: 1fr; }
+}

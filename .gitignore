@@ -1,0 +1,47 @@
+# ========================
+# Node.js / React
+# ========================
+frontend/node_modules/
+frontend/build/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ========================
+# Spring Boot / Maven
+# ========================
+backend/target/
+backend/*.jar
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/mvnw
+backend/mvnw.cmd
+*.class
+*.war
+
+# ========================
+# IDE
+# ========================
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+.project
+.classpath
+.settings/
+
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+*.log
+
+# ========================
+# Secrets
+# ========================
+backend/src/main/resources/application-prod.yml

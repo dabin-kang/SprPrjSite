@@ -1,0 +1,67 @@
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.proj-card { cursor: pointer; }
+
+.proj-thumbnail {
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.proj-num {
+  font-size: 3rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.35);
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.tech-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.78rem;
+  color: var(--text-gray);
+  font-weight: 400;
+}
+
+.proj-modal .modal-img {
+  height: 160px;
+}
+
+.proj-modal-num {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+}
+
+.modal-stack {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+}
+
+.modal-stack strong {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+}
+
+@media (max-width: 900px) {
+  .projects-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 580px) {
+  .projects-grid { grid-template-columns: 1fr; }
+}
