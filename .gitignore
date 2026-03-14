@@ -42,6 +42,13 @@ Thumbs.db
 *.log
 
 # ========================
-# Secrets
+# Secrets (절대 GitHub에 올리면 안 되는 파일들)
 # ========================
 backend/src/main/resources/application-prod.yml
+
+# .env 파일 (실제 값이 들어있으므로 제외)
+backend/.env
+frontend/.env
+.env
+
+# .env.example 은 올려도 됨 (값이 없는 양식만 있음)
