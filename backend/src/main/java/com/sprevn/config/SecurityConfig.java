@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/magazines/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/inquiries").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/event/**").permitAll()
                 // 관리자 전용
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 // 나머지는 인증 필요
