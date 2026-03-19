@@ -1,13 +1,13 @@
-package org.example.sprprjsite
+package org.example.sprprjsite;
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-class SprPrjSiteApplication {
+public class SprPrjSiteApplication {
 
-    static void main(String[] args) {
-        SpringApplication.run(SprPrjSiteApplication, args)
+    public static void main(String[] args) {
+        SpringApplication.run(SprPrjSiteApplication.class, args);
     }
 
 }
