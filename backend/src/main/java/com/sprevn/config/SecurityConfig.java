@@ -23,7 +23,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -34,6 +37,11 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
+
+    // 환경변수로 CORS 허용 도메인 관리
+    // 예) CORS_ALLOWED_ORIGINS=https://sprprjsite.vercel.app,https://www.sprevn.com
+    @Value("${cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    private String allowedOriginsStr;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -64,7 +72,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+
+        // 환경변수에서 허용 도메인 목록 읽기 (쉼표로 구분)
+        List<String> origins = new ArrayList<>(Arrays.asList(allowedOriginsStr.split(",")));
+        // 기본값: 로컬 개발 주소 항상 포함
+        if (!origins.contains("http://localhost:3000")) origins.add("http://localhost:3000");
+        if (!origins.contains("http://localhost:5173")) origins.add("http://localhost:5173");
+        configuration.setAllowedOrigins(origins);
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
