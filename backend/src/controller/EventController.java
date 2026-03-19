@@ -17,3 +17,13 @@ public class EventController {
         return result;
     }
 }
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("https://spr-prj-site.vercel.app/") // 프론트엔드 주소 입력
+                .allowedMethods("GET", "POST", "PUT", "DELETE");
+    }
+}
