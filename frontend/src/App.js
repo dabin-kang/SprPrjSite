@@ -10,6 +10,7 @@ import ProjectPage from './pages/project/ProjectPage';
 import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
 import AdminPage from './pages/admin/AdminPage';
+import CheckPage from './pages/check/CheckPage';
 import './styles/global.css';
 
 function PrivateRoute({ children, adminOnly = false }) {
@@ -32,6 +33,7 @@ function App() {
             <Route path="projects" element={<ProjectPage />} />
             <Route path="inquiry" element={<InquiryPage />} />
             <Route path="magazine" element={<MagazinePage />} />
+            <Route path="check" element={<CheckPage />} />
             <Route path="admin" element={
               <PrivateRoute adminOnly>
                 <AdminPage />
