@@ -47,7 +47,7 @@ function EventPage() {
       <div className="page-header">
         <div className="container">
           <h1>이벤트</h1>
-          <p>스프레브의 다양한 이벤트를 만나보세요</p>
+          <p>창원 용지호수 산책</p>
         </div>
       </div>
 
