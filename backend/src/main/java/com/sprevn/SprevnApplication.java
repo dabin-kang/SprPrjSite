@@ -1,13 +1,12 @@
-package org.example.sprprjsite;
+package com.sprevn;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SprPrjSiteApplication {
+public class SprevnApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SprPrjSiteApplication.class, args);
+        SpringApplication.run(SprevnApplication.class, args);
     }
-
 }
