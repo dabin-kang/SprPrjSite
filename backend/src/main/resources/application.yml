@@ -5,8 +5,8 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/sprevn?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
+    url: jdbc:mysql://junction.proxy.rlwy.net:53390/railway?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
     password: ${SPRING_DATASOURCE_PASSWORD:your_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
@@ -27,7 +27,7 @@ mybatis:
   type-aliases-package: com.sprevn.entity
 
 jwt:
-  secret: ${JWT_SECRET:sprevnSecretKeyForJWTTokenGenerationAndValidation2024VeryLongAndSecureKey}
+  secret: ${JWT_KEY:sprevnSecretKeyForJWTTokenGenerationAndValidation2024VeryLongAndSecureKey}
   expiration: ${JWT_EXPIRATION:86400000}
   refresh-expiration: 604800000
 
