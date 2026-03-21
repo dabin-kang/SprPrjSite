@@ -36,7 +36,7 @@ function MainPage() {
               <span className="accent">경험</span>을 만들다
             </h1>
             <p className="hero-desc">
-              스프레브은 창의적인 아이디어와 최신 기술로<br />
+              말랑뮤즈는 창의적인 아이디어와 최신 기술로<br />
               당신의 비전을 현실로 만드는 파트너입니다.
             </p>
             <div className="hero-buttons">
@@ -87,7 +87,7 @@ function MainPage() {
         <div className="container">
           <div className="text-center">
             <h2 className="section-title">우리가 제공하는 것</h2>
-            <p className="section-subtitle">스프레브과 함께라면 무엇이든 가능합니다</p>
+            <p className="section-subtitle">말랑뮤즈와 함께라면 무엇이든 가능합니다</p>
           </div>
           <div className="features-grid">
             {features.map((f, i) => (
@@ -109,7 +109,7 @@ function MainPage() {
           <div className="section-header">
             <div>
               <h2 className="section-title">최신 이벤트</h2>
-              <p className="section-subtitle">놓치면 아쉬운 스프레브 이벤트</p>
+              <p className="section-subtitle">놓치면 아쉬운 말랑뮤즈 이벤트</p>
             </div>
             <Link to="/events" className="btn btn-secondary">전체 보기 →</Link>
           </div>
@@ -121,7 +121,7 @@ function MainPage() {
                 </div>
                 <div className="card-body">
                   <span className="badge badge-success">진행중</span>
-                  <h3 className="card-title">스프레브 이벤트 {i}호</h3>
+                  <h3 className="card-title">말랑뮤즈 이벤트 {i}호</h3>
                   <p className="card-text">다양한 혜택과 함께하는 특별한 이벤트입니다.</p>
                   <Link to="/events" className="btn btn-sm btn-primary" style={{marginTop: '12px'}}>자세히 보기</Link>
                 </div>
@@ -136,7 +136,7 @@ function MainPage() {
         <div className="container">
           <div className="cta-content">
             <h2>지금 바로 시작하세요</h2>
-            <p>스프레브과 함께 특별한 경험을 만들어보세요</p>
+            <p>말랑뮤즈와 함께 특별한 경험을 만들어보세요</p>
             <div className="cta-buttons">
               <Link to="/signup" className="btn btn-primary btn-lg">무료 회원가입</Link>
               <Link to="/inquiry" className="btn btn-secondary btn-lg">상담 문의</Link>

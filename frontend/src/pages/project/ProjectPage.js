@@ -55,7 +55,7 @@ function ProjectPage() {
       <div className="page-header">
         <div className="container">
           <h1>프로젝트 소개</h1>
-          <p>스프레브이 진행한 다양한 프로젝트를 소개합니다</p>
+          <p>말랑뮤즈가 진행하는 다양한 프로젝트를 소개합니다</p>
         </div>
       </div>
 
