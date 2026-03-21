@@ -188,7 +188,7 @@ function CheckPage() {
 
     /* 체크 3: 백엔드 헬스체크 */
     try {
-      const res = await fetch(`${API_URL}/api/health`);
+      const res = await fetch(`${API_URL}/health`);
       if (res.ok) {
         const data = await res.json();
         const h = data.data || {};
@@ -220,7 +220,7 @@ function CheckPage() {
 
     /* 체크 5: 로그인 API */
     try {
-      const res = await fetch(`${API_URL}/api/auth/login`, {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'admin', password: 'admin1234' }),
