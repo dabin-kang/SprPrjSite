@@ -3,7 +3,7 @@ import { eventApi } from '../../api';
 import './EventPage.css';
 
 const DUMMY_EVENTS = [
-  { eventId: 1, title: '봄맞이 특별 이벤트', content: '봄을 맞아 특별한 혜택을 드립니다.', startDate: '2024-03-01', endDate: '2024-04-30', status: 1 },
+  { eventId: 1, title: '용지호수 산책', content: '봄을 맞아 특별한 혜택을 드립니다.', startDate: '2024-03-01', endDate: '2024-04-30', status: 1 },
   { eventId: 2, title: '회원가입 축하 이벤트', content: '신규 회원가입 시 특별 포인트를 드립니다.', startDate: '2024-01-01', endDate: '2024-12-31', status: 1 },
   { eventId: 3, title: '프리미엄 멤버십 론칭', content: '프리미엄 멤버십 출시를 기념하는 특별 이벤트입니다.', startDate: '2024-02-01', endDate: '2024-03-31', status: 1 },
 ];
