@@ -40,6 +40,7 @@ public class SecurityConfig {
     // 설정이 없으면 localhost 주소들을 기본값으로 사용합니다.
     @Value("${cors.allowed-origins:https://dabin-kang-front.vercel.app")
     private String allowedOrigins;
+    System.out.println
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
