@@ -188,7 +188,7 @@ function CheckPage() {
 
     /* 체크 3: 백엔드 헬스체크 */
     try {
-      const res = await fetch(`${API_URL}api/health`);
+      const res = await fetch(`${API_URL}/api/health`);
       if (res.ok) {
         const data = await res.json();
         const h = data.data || {};
