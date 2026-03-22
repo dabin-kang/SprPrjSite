@@ -220,7 +220,7 @@ function CheckPage() {
 
     /* 체크 5: 로그인 API */
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: 'admin', password: 'admin1234' }),
