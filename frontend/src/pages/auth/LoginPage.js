@@ -41,7 +41,7 @@ function LoginPage() {
               <span className="logo-sp">SP</span>REVN
             </div>
             <h2>다시 만나서 반갑습니다!</h2>
-            <p>스프레브의 다양한 서비스를<br />로그인하고 경험해보세요.</p>
+            <p>말랑뮤즈의 다양한 서비스를<br />로그인하고 경험해보세요.</p>
             <div className="auth-visual-deco">
               <div className="deco-circle" />
               <div className="deco-circle deco-2" />
