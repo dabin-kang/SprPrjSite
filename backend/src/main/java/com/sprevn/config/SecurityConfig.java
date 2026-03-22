@@ -38,9 +38,8 @@ public class SecurityConfig {
 
     // application.yml의 cors.allowed-origins 값을 주입받습니다.
     // 설정이 없으면 localhost 주소들을 기본값으로 사용합니다.
-    @Value("${cors.allowed-origins:https://dabin-kang-front.vercel.app")
+    @Value("${cors.allowed-origins:http://localhost:3000,https://dabin-kang-front.vercel.app}")
     private String allowedOrigins;
-    System.out.println
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -71,16 +70,24 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 쉼표로 구분된 문자열을 리스트로 변환하여 설정합니다.
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        // 환경 변수에서 가져온 도메인들을 리스트로 변환
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        configuration.setAllowedOrigins(origins);
 
+        // 모든 HTTP 메서드 허용
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+
+        // 허용할 헤더 설정 (Authorization 필구)
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control", "X-Requested-With"));
+
+        // 자격 증명 허용 (JWT 사용 시 중요)
         configuration.setAllowCredentials(true);
+
+        // 프리플라이트(Preflight) 요청 캐싱 시간
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 CORS 적용
         return source;
     }
 
