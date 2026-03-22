@@ -38,7 +38,7 @@ public class SecurityConfig {
 
     // application.yml의 cors.allowed-origins 값을 주입받습니다.
     // 설정이 없으면 localhost 주소들을 기본값으로 사용합니다.
-    @Value("${cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
+    @Value("${cors.allowed-origins:https://dabin-kang-front.vercel.app")
     private String allowedOrigins;
 
     @Bean
