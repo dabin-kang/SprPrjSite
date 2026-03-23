@@ -223,7 +223,7 @@ function CheckPage() {
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: 'admin', password: 'admin1234' }),
+        body: JSON.stringify({ id: 'aaaa', password: '1234567' }),
       });
       const data = await res.json();
       if (data.success && data.data?.accessToken) {
