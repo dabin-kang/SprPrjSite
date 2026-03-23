@@ -1,10 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-// Load environment variables (e.g., from a .env file)
-const supabaseUrl = process.env.REACT_PUBLIC_SUPABASE_URL; // For client-side safe public URL
-const supabaseAnonKey = process.env.REACT_PUBLIC_SUPABASE_ANON_KEY; // For client-side safe public key
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseKey = process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
 
-// Create a Supabase client instance
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-export { supabase };
+export const supabase = createClient(supabaseUrl, supabaseKey);
