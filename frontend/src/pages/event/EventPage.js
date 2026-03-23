@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { eventApi } from '../../api';
 import './EventPage.css';
+import { useSignedUrls } from '../../hooks/useSignedUrl';
+
+
+
 
 const DUMMY_EVENTS = [
   { eventId: 1, title: '용지호수 산책', content: '봄을 맞아 특별한 혜택을 드립니다.', startDate: '2024-03-01', endDate: '2024-04-30', status: 1 },
@@ -15,6 +19,13 @@ function EventPage() {
   const [total, setTotal] = useState(0);
   const [selected, setSelected] = useState(null);
   const size = 9;
+
+  const urls = useSignedUrls([
+    'spr_event/20230526_171344.jpg',
+    'spr_event/20230526_175944.jpg'
+  ]);
+
+  console.log(urls);
 
   const fetchEvents = useCallback(async () => {
     setLoading(true);
