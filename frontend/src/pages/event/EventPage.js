@@ -20,12 +20,7 @@ function EventPage() {
   const [selected, setSelected] = useState(null);
   const size = 9;
 
-  const urls = useSignedUrls([
-    'spr_event/20230526_171344.jpg',
-    'spr_event/20230526_175944.jpg'
-  ]);
-
-  console.log(urls);
+  const urls = useSignedUrls(['1682221947960.jpg']);
 
   const fetchEvents = useCallback(async () => {
     setLoading(true);
@@ -59,6 +54,7 @@ function EventPage() {
         <div className="container">
           <h1>이벤트</h1>
           <p>창원 용지호수 산책</p>
+          <img src={urls[0]?.signedUrl} />
         </div>
       </div>
 
