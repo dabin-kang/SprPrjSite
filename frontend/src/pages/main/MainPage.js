@@ -61,7 +61,7 @@ function MainPage() {
             </div>
             <div className="hero-main-visual">
               <div className="visual-circle">
-                <span>SPREVN</span>
+                <span>말랑뮤즈</span>
               </div>
             </div>
           </div>
