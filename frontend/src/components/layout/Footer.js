@@ -12,8 +12,8 @@ function Footer() {
               <span className="logo-sp">SP</span>REVN
             </div>
             <p className="footer-desc">
-              스프레브은 혁신적인 디지털 경험을 만들어가는<br />
-              크리에이티브 스튜디오입니다.
+              말랑뮤즈는 문화프로젝트 라이프스타일<br />
+              크리에이티브 팀 입니다.
             </p>
           </div>
 

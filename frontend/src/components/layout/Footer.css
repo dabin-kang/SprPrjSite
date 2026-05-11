@@ -1,6 +1,6 @@
 .footer {
   background: var(--primary);
-  color: rgba(255,255,255,0.8);
+  color: rgba(14, 1, 1, 0.8);
   padding: 60px 0 30px;
   margin-top: auto;
 }
@@ -52,7 +52,7 @@
   color: var(--accent);
 }
 
-.footer-contact{
+.footer-contact p {
   font-size: 0.88rem;
   color: rgba(255,255,255,0.6);
   margin-bottom: 8px;
