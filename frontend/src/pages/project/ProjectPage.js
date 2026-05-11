@@ -3,7 +3,7 @@ import { projectApi } from '../../api';
 import './ProjectPage.css';
 
 const DUMMY_PROJECTS = [
-  { projectId: 1, title: 'AI 챗봇 플랫폼', description: 'GPT 기반 고객 서비스 자동화 솔루션입니다.', techStack: 'React, Spring Boot, Python, OpenAI', imageUrl: null, projectUrl: '#' },
+  { projectId: 1, title: '성주사 문화 브랜드', description: 'GPT 기반 고객 서비스 자동화 솔루션입니다.', techStack: 'React, Spring Boot, Python, OpenAI', imageUrl: null, projectUrl: '#' },
   { projectId: 2, title: '스마트 쇼핑몰', description: '개인화 추천 알고리즘이 적용된 이커머스 플랫폼입니다.', techStack: 'Vue.js, Node.js, MySQL, Redis', imageUrl: null, projectUrl: '#' },
   { projectId: 3, title: '의료 데이터 분석', description: '빅데이터 기술을 활용한 의료 데이터 시각화 대시보드입니다.', techStack: 'React, Django, PostgreSQL, Tableau', imageUrl: null, projectUrl: '#' },
   { projectId: 4, title: '스마트 홈 IoT', description: 'IoT 기기 연동 홈 자동화 시스템입니다.', techStack: 'React Native, MQTT, Spring Boot, AWS', imageUrl: null, projectUrl: '#' },
