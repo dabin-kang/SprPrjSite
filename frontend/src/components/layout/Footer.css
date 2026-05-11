@@ -1,6 +1,6 @@
 .footer {
   background: var(--primary);
-  color: rgba(14, 1, 1, 0.8);
+  color: rgba(240, 230, 230, 0.8);
   padding: 60px 0 30px;
   margin-top: auto;
 }
@@ -28,7 +28,7 @@
 
 .footer-links h4,
 .footer-contact h4 {
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 16px;
