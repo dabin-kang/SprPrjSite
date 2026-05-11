@@ -9,7 +9,7 @@ function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="footer-logo">
-              <span className="logo-sp">SP</span>REVN
+              <span className="logo-sp">말랑뮤즈</span>
             </div>
             <p className="footer-desc">
               말랑뮤즈는 문화프로젝트 라이프스타일<br />
