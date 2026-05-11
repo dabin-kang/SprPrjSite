@@ -32,7 +32,7 @@ function Header() {
     <header className="header">
       <div className="header-inner container">
         <Link to="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <span className="logo-sp">SP</span>REVN
+          <span className="logo-sp">말랑뮤즈</span>
         </Link>
 
         <nav className={`nav ${menuOpen ? 'open' : ''}`}>
