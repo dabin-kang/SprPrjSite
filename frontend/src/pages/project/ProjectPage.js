@@ -6,14 +6,6 @@ import {Link} from "react-router-dom";
 
 
 
-const Project_List = {
-  '창원조각비엔날레': '/projects/changwon-biennale',
-};
-
-<Link
-  to={Project_List[proj.title] || '#'}
-  className="proj-card card"
-></Link>
 
 
 
