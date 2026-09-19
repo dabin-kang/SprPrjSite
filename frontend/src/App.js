@@ -11,6 +11,7 @@ import EventPage from './pages/event/EventPage';
 
 import ProjectPage from './pages/project/ProjectPage';
 import ChangwonBiennalePage from './pages/project/ChangwonBiennalePage';
+import BulmosanGoodsPage from './pages/project/BulmosanGoodsPage';
 
 import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
@@ -41,6 +42,7 @@ function AppRoutes() {
         <Route path="events" element={<EventPage />} />
         <Route path="projects" element={<ProjectPage />} />
         <Route path="projects/changwon-biennale" element={<ChangwonBiennalePage/>} />
+        <Route path="projects/bulmosan-goods" element={<BulmosanGoodsPage/>} />
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="magazine" element={<MagazinePage />} />
         <Route path="check" element={<CheckPage />} />
