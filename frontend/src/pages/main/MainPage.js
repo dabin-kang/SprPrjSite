@@ -87,7 +87,7 @@ function MainPage() {
         <div className="container">
           <div className="text-center">
             <h2 className="section-title">우리가 제공하는 것</h2>
-            <p className="section-subtitle">말랑뮤즈와 함께라면 무엇이든 가능합니다</p>
+            <p className="section-subtitle">창원조각비엔날레 조각지도</p>
           </div>
           <div className="features-grid">
             {features.map((f, i) => (
