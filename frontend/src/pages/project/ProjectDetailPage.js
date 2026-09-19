@@ -103,17 +103,50 @@ function ProjectDetailPage() {
           src={project.image}
           alt={project.title}
         />
-
       </section>
 
+          {/* INTRO */}
+    <section className="project-detail-intro">
 
-      <section className="project-detail-content">
+      <p>
+        {project.intro}
+      </p>
 
-        <p>
-          {project.content}
-        </p>
+    </section>
+
+
+       {/* CONTENT */}
+    {project.sections.map((section, index) => (
+
+      <section
+        className="project-content-section"
+        key={index}
+      >
+
+        <div className="project-content-text">
+
+          <p className="section-number">
+            0{index + 1}
+          </p>
+
+          <h2>{section.title}</h2>
+
+          <p>{section.text}</p>
+
+        </div>
+
+
+        <div className="project-content-image">
+
+          <img
+            src={section.image}
+            alt={section.title}
+          />
+
+        </div>
 
       </section>
+    ))}
 
 
       <section className="project-detail-navigation">
