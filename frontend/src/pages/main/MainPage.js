@@ -108,10 +108,10 @@ function MainPage() {
         <div className="container">
           <div className="section-header">
             <div>
-              <h2 className="section-title">최신 이벤트</h2>
+              <h2 className="section-title">프로젝트</h2>
               <p className="section-subtitle">놓치면 아쉬운 말랑뮤즈 이벤트</p>
             </div>
-            <Link to="/events" className="btn btn-secondary">전체 보기 →</Link>
+            <Link to="/projects" className="btn btn-secondary">전체 보기 →</Link>
           </div>
           <div className="preview-cards">
             {[1, 2, 3].map((i) => (
