@@ -9,7 +9,7 @@ const projects = [
     number: '01',
     title: '창원 비엔날레',
     description: '2026년 창원조각비엔날레 지도프로젝트.',
-    image: '/images/projects/changwonmain.png',
+    image: '/images/projects/ChangwonBiennalePage/changwonmain.png',
     path: '/projects/changwon-biennale',
   },
   {
