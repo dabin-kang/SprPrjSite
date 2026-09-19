@@ -99,7 +99,6 @@ function ProjectDetailPage() {
 
 
       <section className="project-detail-image">
-
         <img
           src={project.image}
           alt={project.title}
