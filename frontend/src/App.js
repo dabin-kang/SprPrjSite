@@ -9,6 +9,7 @@ import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import EventPage from './pages/event/EventPage';
 import ProjectPage from './pages/project/ProjectPage';
+import ProjectDetailPage from './pages/project/ProjectDetailPage';
 import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
 import AdminPage from './pages/admin/AdminPage';
