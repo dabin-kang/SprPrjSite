@@ -39,7 +39,7 @@ const projects = [
       지역문화상품 개발 프로젝트.
     `,
 
-    section1:[
+    sections: [
         {
             title: '상품개발',
             text:
@@ -116,7 +116,7 @@ function ProjectDetailPage() {
 
 
        {/* CONTENT */}
-    {project.sections.map((section, index) => (
+    {project.sections?.map((section, index) => (
 
       <section
         className="project-content-section"
@@ -136,14 +136,14 @@ function ProjectDetailPage() {
         </div>
 
 
-        <div className="project-content-image">
-
-          <img
-            src={section.image}
-            alt={section.title}
-          />
-
-        </div>
+        {section.image && (
+          <div className="project-content-image">
+            <img
+              src={section.image}
+              alt={section.title}
+            />
+          </div>
+        )}
 
       </section>
     ))}
