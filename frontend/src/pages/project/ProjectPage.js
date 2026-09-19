@@ -1,6 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { projectApi } from '../../api';
 import './ProjectPage.css';
+import {Link} from "react-router-dom";
+
+
+
+
+const Project_List = {
+  '창원조각비엔날레': '/projects/changwon-biennale',
+};
+
+<Link
+  to={Project_List[proj.title] || '#'}
+  className="proj-card card"
+></Link>
+
+
+
 
 const DUMMY_PROJECTS = [
   { projectId: 1, title: '성주사 문화 브랜드', description: 'GPT 기반 고객 서비스 자동화 솔루션입니다.', techStack: 'React, Spring Boot, Python, OpenAI', imageUrl: null, projectUrl: '#' },
@@ -55,7 +71,7 @@ function ProjectPage() {
       <div className="page-header">
         <div className="container">
           <h1>프로젝트 소개</h1>
-          <p>말랑뮤즈가 진행하는 다양한 프로젝트를 소개합니다</p>
+          <p>프로젝트를 소개합니다</p>
         </div>
       </div>
 

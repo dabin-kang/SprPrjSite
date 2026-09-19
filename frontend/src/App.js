@@ -8,7 +8,10 @@ import MainPage from './pages/main/MainPage';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
 import EventPage from './pages/event/EventPage';
+
 import ProjectPage from './pages/project/ProjectPage';
+import ChangwonBiennalePage from './pages/project/ChangwonBiennalePage';
+
 import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
 import AdminPage from './pages/admin/AdminPage';
@@ -37,6 +40,7 @@ function AppRoutes() {
         <Route index element={<MainPage />} />
         <Route path="events" element={<EventPage />} />
         <Route path="projects" element={<ProjectPage />} />
+        <Route path="projects/changwon-biennale" element={<ChangwonBiennalePage/>} />
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="magazine" element={<MagazinePage />} />
         <Route path="check" element={<CheckPage />} />
