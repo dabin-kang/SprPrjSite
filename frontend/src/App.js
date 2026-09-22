@@ -40,7 +40,7 @@ function AppRoutes() {
         { <Route path="events" element={<EventPage />} /> }
         <Route path="projects" element={<ProjectPage />} />
         <Route path="projects/:projectId" element={<ProjectDetailPage/>} />
-        <Route path="changwon-biennale-map" element={<ChangwonBiennaleMapPage />} />
+        <Route path="projects/changwon-biennale/map" element={<ChangwonBiennaleMapPage />} />
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="magazine" element={<MagazinePage />} />
         <Route path="check" element={<CheckPage />} />

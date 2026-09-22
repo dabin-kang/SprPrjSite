@@ -115,6 +115,44 @@
 }
 
 
+/* =========================================================
+   CHANGWON BIENNALE MAP LINK
+   ========================================================= */
+
+.project-map-link-section {
+  max-width: 800px;
+  margin: -40px auto 100px;
+}
+
+.project-map-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 24px 28px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.project-map-link:hover {
+  background: #222;
+  transform: translateY(-2px);
+}
+
+.project-map-link span {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  opacity: 0.55;
+}
+
+.project-map-link strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+
 /* MOBILE */
 
 @media (max-width: 700px) {
@@ -145,4 +183,20 @@
   max-width: 100%;
   max-height: 450px;
 }
+
+.project-map-link-section {
+    margin: -20px auto 70px;
+  }
+
+  .project-map-link {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 22px;
+  }
+
+  .project-map-link strong {
+    font-size: 14px;
+  }
 }
+

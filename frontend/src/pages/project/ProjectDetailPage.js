@@ -105,6 +105,37 @@ function ProjectDetailPage() {
         />
       </section>
 
+
+
+        {/* ======================================================
+          창원 비엔날레 지도 버튼
+          창원 비엔날레 프로젝트에서만 표시
+      ====================================================== */}
+
+      {project.id === 'changwon-biennale' && (
+
+        <section className="project-map-link-section">
+
+          <Link
+            to="/projects/changwon-biennale/map"
+            className="project-map-link"
+          >
+            <span>
+              CHANGWON SCULPTURE BIENNALE
+            </span>
+
+            <strong>
+              창원 조각 지도 보기 →
+            </strong>
+          </Link>
+
+        </section>
+
+      )}
+
+
+
+
           {/* INTRO */}
     <section className="project-detail-intro">
 

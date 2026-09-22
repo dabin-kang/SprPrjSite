@@ -1,3 +1,8 @@
+
+가 실제 파일에 들어가 있었다는 것입니다.
+
+아래에는 그런 코드펜스가 없습니다.
+
 ```css
 /* =========================================================
    CHANGWON BIENNALE MAP
@@ -352,7 +357,9 @@
   right: 16px;
   width: 30px;
   height: 30px;
+  padding: 0;
   background: transparent;
+  border: none;
   color: #777;
   font-size: 24px;
   line-height: 1;
@@ -403,7 +410,6 @@
    ========================================================= */
 
 @media (max-width: 900px) {
-
   .biennale-map-header {
     padding: 80px 20px 60px;
   }
@@ -436,12 +442,10 @@
   .map-error {
     min-height: 560px;
   }
-
 }
 
 
 @media (max-width: 600px) {
-
   .biennale-map-header h1 {
     font-size: 48px;
   }
@@ -472,5 +476,4 @@
     left: 12px;
     width: auto;
   }
-
 }

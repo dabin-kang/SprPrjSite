@@ -1,4 +1,3 @@
-```jsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './ChangwonBiennaleMapPage.css';
@@ -8,10 +7,15 @@ import './ChangwonBiennaleMapPage.css';
  * 창원조각비엔날레 전시 공간 데이터
  * ============================================================
  *
- * 현재는 "전시 공간"을 먼저 표시합니다.
+ * 현재는 전시 공간을 먼저 표시합니다.
  *
- * 실제 작품 위치가 확정되면 ARTWORKS 배열에
+ * 실제 작품 위치가 확인되면 ARTWORKS 배열에
  * 작품 데이터를 추가하면 됩니다.
+ *
+ * 주의:
+ * 현재 입력된 장소 정보는 지도 기능 테스트용입니다.
+ * 실제 2026 창원조각비엔날레 공식 전시 장소/작품 정보가
+ * 확정되면 해당 데이터로 교체하세요.
  */
 
 const VENUES = [
@@ -22,7 +26,7 @@ const VENUES = [
     area: '창원',
     address: '경남 창원시 성산구 중앙대로 181',
     description:
-      '창원 도심의 주요 문화공간으로 비엔날레의 주요 전시 거점 중 하나입니다.',
+      '창원 도심의 주요 문화공간으로 비엔날레 전시를 연결하는 장소입니다.',
   },
   {
     id: 'changwon-house',
@@ -31,7 +35,7 @@ const VENUES = [
     area: '창원',
     address: '경남 창원시 의창구 사림로16번길 59',
     description:
-      '전통적인 공간의 시간성과 동시대 조각이 만나는 전시 공간입니다.',
+      '전통적인 공간의 시간성과 동시대 조각을 연결하는 장소입니다.',
   },
   {
     id: 'history-museum',
@@ -40,7 +44,7 @@ const VENUES = [
     area: '창원',
     address: '경남 창원시 의창구 창이대로397번길 25',
     description:
-      '창원의 역사와 생활문화를 보여주는 공간으로 작품과 도시의 기억을 연결합니다.',
+      '창원의 역사와 생활문화를 보여주는 공간입니다.',
   },
   {
     id: 'jinhae-station',
@@ -49,7 +53,7 @@ const VENUES = [
     area: '진해',
     address: '경남 창원시 진해구 여좌동',
     description:
-      '철도와 도시의 기억을 따라 작품을 발견할 수 있는 진해 전시 구간입니다.',
+      '진해의 도시와 철도의 기억을 따라 작품을 발견할 수 있는 장소입니다.',
   },
   {
     id: 'masan-market',
@@ -58,7 +62,7 @@ const VENUES = [
     area: '마산',
     address: '경남 창원시 마산합포구 복요리로 7',
     description:
-      '시장의 일상과 도시의 생활 풍경 속에서 작품을 만나는 마산의 전시 거점입니다.',
+      '시장의 일상과 도시의 생활 풍경 속에서 작품을 만나는 장소입니다.',
   },
 ];
 
@@ -67,7 +71,7 @@ const VENUES = [
  * 작품 데이터
  * ============================================================
  *
- * 실제 작품 위치가 확인되면 아래에 추가합니다.
+ * 실제 작품 정보가 확인되면 이곳에 추가합니다.
  *
  * 예시:
  *
@@ -77,16 +81,14 @@ const VENUES = [
  *   title: '작품명',
  *   artist: '작가명',
  *   address: '정확한 작품 설치 주소',
- *   venueId: 'sungsan',
+ *   area: '창원',
  *   description: '작품 설명',
  * }
  */
 
 const ARTWORKS = [];
 
-
 function ChangwonBiennaleMapPage() {
-
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
@@ -96,7 +98,6 @@ function ChangwonBiennaleMapPage() {
   const [mapReady, setMapReady] = useState(false);
   const [mapError, setMapError] = useState(false);
 
-
   /*
    * ============================================================
    * 카카오맵 SDK 불러오기
@@ -104,7 +105,6 @@ function ChangwonBiennaleMapPage() {
    */
 
   useEffect(() => {
-
     const appKey = process.env.REACT_APP_KAKAO_MAP_KEY;
 
     if (!appKey) {
@@ -112,38 +112,49 @@ function ChangwonBiennaleMapPage() {
       return;
     }
 
-    if (window.kakao && window.kakao.maps) {
+    const initializeKakaoMap = () => {
+      if (!window.kakao || !window.kakao.maps) {
+        setMapError(true);
+        return;
+      }
 
       window.kakao.maps.load(() => {
         setMapReady(true);
       });
+    };
 
+    /*
+     * 이미 카카오맵 SDK가 로드되어 있는 경우
+     */
+    if (window.kakao && window.kakao.maps) {
+      initializeKakaoMap();
       return;
     }
 
-    const existingScript =
-      document.querySelector('script[data-kakao-map]');
+    /*
+     * 이미 다른 곳에서 SDK를 불러오고 있는 경우
+     */
+    const existingScript = document.querySelector(
+      'script[data-kakao-map]'
+    );
 
     if (existingScript) {
-
       existingScript.addEventListener(
         'load',
-        () => {
-
-          if (window.kakao && window.kakao.maps) {
-
-            window.kakao.maps.load(() => {
-              setMapReady(true);
-            });
-
-          }
-
-        }
+        initializeKakaoMap
       );
 
-      return;
+      return () => {
+        existingScript.removeEventListener(
+          'load',
+          initializeKakaoMap
+        );
+      };
     }
 
+    /*
+     * 카카오맵 SDK 새로 생성
+     */
     const script = document.createElement('script');
 
     script.dataset.kakaoMap = 'true';
@@ -153,17 +164,7 @@ function ChangwonBiennaleMapPage() {
 
     script.async = true;
 
-    script.onload = () => {
-
-      if (window.kakao && window.kakao.maps) {
-
-        window.kakao.maps.load(() => {
-          setMapReady(true);
-        });
-
-      }
-
-    };
+    script.onload = initializeKakaoMap;
 
     script.onerror = () => {
       setMapError(true);
@@ -171,8 +172,13 @@ function ChangwonBiennaleMapPage() {
 
     document.head.appendChild(script);
 
+    return () => {
+      /*
+       * SDK 자체는 삭제하지 않습니다.
+       * 다른 페이지에서 다시 사용할 수 있기 때문입니다.
+       */
+    };
   }, []);
-
 
   /*
    * ============================================================
@@ -181,7 +187,6 @@ function ChangwonBiennaleMapPage() {
    */
 
   useEffect(() => {
-
     if (
       !mapReady ||
       !mapRef.current ||
@@ -206,20 +211,22 @@ function ChangwonBiennaleMapPage() {
 
     mapInstanceRef.current = map;
 
-    return () => {
+    /*
+     * 지도가 만들어진 후 크기 다시 계산
+     */
+    setTimeout(() => {
+      map.relayout();
+    }, 100);
 
+    return () => {
       markersRef.current.forEach((marker) => {
         marker.setMap(null);
       });
 
       markersRef.current = [];
-
       mapInstanceRef.current = null;
-
     };
-
   }, [mapReady]);
-
 
   /*
    * ============================================================
@@ -228,7 +235,6 @@ function ChangwonBiennaleMapPage() {
    */
 
   useEffect(() => {
-
     if (
       !mapReady ||
       !mapInstanceRef.current ||
@@ -239,18 +245,17 @@ function ChangwonBiennaleMapPage() {
     }
 
     const kakao = window.kakao;
-
     const map = mapInstanceRef.current;
 
     /*
      * 기존 마커 제거
      */
-
     markersRef.current.forEach((marker) => {
       marker.setMap(null);
     });
 
     markersRef.current = [];
+    setSelected(null);
 
     const items =
       activeType === 'venue'
@@ -260,9 +265,7 @@ function ChangwonBiennaleMapPage() {
     /*
      * 작품 데이터가 아직 없는 경우
      */
-
     if (items.length === 0) {
-      setSelected(null);
       return;
     }
 
@@ -272,68 +275,69 @@ function ChangwonBiennaleMapPage() {
     const bounds =
       new kakao.maps.LatLngBounds();
 
-    items.forEach((item) => {
+    let completedCount = 0;
 
+    /*
+     * 주소를 좌표로 변환
+     */
+    items.forEach((item) => {
       geocoder.addressSearch(
         item.address,
         (result, status) => {
+          completedCount += 1;
 
           if (
-            status !==
+            status ===
             kakao.maps.services.Status.OK
           ) {
-            return;
+            const position =
+              new kakao.maps.LatLng(
+                result[0].y,
+                result[0].x
+              );
+
+            const marker =
+              new kakao.maps.Marker({
+                map,
+                position,
+                title:
+                  item.title || item.name,
+              });
+
+            markersRef.current.push(marker);
+
+            bounds.extend(position);
+
+            /*
+             * 마커 클릭
+             */
+            kakao.maps.event.addListener(
+              marker,
+              'click',
+              () => {
+                setSelected(item);
+              }
+            );
           }
 
-          const position =
-            new kakao.maps.LatLng(
-              result[0].y,
-              result[0].x
-            );
-
-          const marker =
-            new kakao.maps.Marker({
-              map,
-              position,
-              title:
-                item.title || item.name,
-            });
-
-          markersRef.current.push(marker);
-
-          bounds.extend(position);
-
           /*
-           * 마커 클릭
+           * 모든 주소 검색이 끝난 뒤
+           * 지도 범위를 한 번에 조정
            */
+          if (
+            completedCount === items.length &&
+            !bounds.isEmpty()
+          ) {
+            map.setBounds(bounds);
 
-          kakao.maps.event.addListener(
-            marker,
-            'click',
-            () => {
-              setSelected(item);
-            }
-          );
-
+            setTimeout(() => {
+              map.relayout();
+            }, 100);
+          }
         }
       );
-
     });
-
-    /*
-     * 모든 장소가 들어오면 지도 범위 조정
-     */
-
-    setTimeout(() => {
-
-      if (!bounds.isEmpty()) {
-        map.setBounds(bounds);
-      }
-
-    }, 1000);
-
   }, [mapReady, activeType]);
-
 
   /*
    * ============================================================
@@ -342,12 +346,7 @@ function ChangwonBiennaleMapPage() {
    */
 
   const handleItemClick = (item) => {
-
     setSelected(item);
-
-    /*
-     * 지도에서 해당 위치로 이동
-     */
 
     if (
       !mapInstanceRef.current ||
@@ -365,7 +364,6 @@ function ChangwonBiennaleMapPage() {
     geocoder.addressSearch(
       item.address,
       (result, status) => {
-
         if (
           status !==
           kakao.maps.services.Status.OK
@@ -379,24 +377,21 @@ function ChangwonBiennaleMapPage() {
             result[0].x
           );
 
-        mapInstanceRef.current.setCenter(position);
+        mapInstanceRef.current.setCenter(
+          position
+        );
 
         mapInstanceRef.current.setLevel(5);
-
       }
     );
-
   };
-
 
   const items =
     activeType === 'venue'
       ? VENUES
       : ARTWORKS;
 
-
   return (
-
     <main className="biennale-map-page">
 
       {/* ======================================================
@@ -404,7 +399,6 @@ function ChangwonBiennaleMapPage() {
       ====================================================== */}
 
       <section className="biennale-map-header">
-
         <div className="biennale-map-header-inner">
 
           <p className="page-label">
@@ -422,9 +416,7 @@ function ChangwonBiennaleMapPage() {
           </p>
 
         </div>
-
       </section>
-
 
       {/* ======================================================
           MAP CONTENT
@@ -433,7 +425,6 @@ function ChangwonBiennaleMapPage() {
       <section className="biennale-map-section">
 
         <div className="biennale-map-layout">
-
 
           {/* ==================================================
               SIDEBAR
@@ -457,7 +448,6 @@ function ChangwonBiennaleMapPage() {
               </p>
 
             </div>
-
 
             {/* 탭 */}
 
@@ -492,7 +482,6 @@ function ChangwonBiennaleMapPage() {
               </button>
 
             </div>
-
 
             {/* 장소 목록 */}
 
@@ -552,20 +541,20 @@ function ChangwonBiennaleMapPage() {
                         </small>
                       )}
 
-                      <small>
-                        {item.area}
-                      </small>
+                      {item.area && (
+                        <small>
+                          {item.area}
+                        </small>
+                      )}
 
                     </span>
 
                   </button>
 
                 ))
-
               )}
 
             </div>
-
 
             {/* 뒤로가기 */}
 
@@ -577,7 +566,6 @@ function ChangwonBiennaleMapPage() {
             </Link>
 
           </aside>
-
 
           {/* ==================================================
               MAP
@@ -623,7 +611,6 @@ function ChangwonBiennaleMapPage() {
               />
 
             )}
-
 
             {/* =================================================
                 선택된 장소 카드
@@ -680,7 +667,6 @@ function ChangwonBiennaleMapPage() {
       </section>
 
     </main>
-
   );
 }
 
