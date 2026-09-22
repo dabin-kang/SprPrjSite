@@ -10,6 +10,7 @@ import SignupPage from './pages/auth/SignupPage';
 import EventPage from './pages/event/EventPage';
 import ProjectPage from './pages/project/ProjectPage';
 import ProjectDetailPage from './pages/project/ProjectDetailPage';
+import ChangwonBiennaleMapPage from './pages/project/ChangwonBiennaleMapPage';
 import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
 import AdminPage from './pages/admin/AdminPage';
@@ -39,6 +40,7 @@ function AppRoutes() {
         { <Route path="events" element={<EventPage />} /> }
         <Route path="projects" element={<ProjectPage />} />
         <Route path="projects/:projectId" element={<ProjectDetailPage/>} />
+        <Route path="changwon-biennale-map" element={<ChangwonBiennaleMapPage />} />
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="magazine" element={<MagazinePage />} />
         <Route path="check" element={<CheckPage />} />
