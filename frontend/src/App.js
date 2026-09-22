@@ -36,7 +36,7 @@ function AppRoutes() {
       <Route path="/" element={<Layout />}>
         {/* 공개 라우트 */}
         <Route index element={<MainPage />} />
-        <Route path="events" element={<EventPage />} />
+        { <Route path="events" element={<EventPage />} /> }
         <Route path="projects" element={<ProjectPage />} />
         <Route path="projects/:projectId" element={<ProjectDetailPage/>} />
         <Route path="inquiry" element={<InquiryPage />} />
