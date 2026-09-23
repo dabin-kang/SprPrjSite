@@ -15,6 +15,7 @@ import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
 import AdminPage from './pages/admin/AdminPage';
 import CheckPage from './pages/check/CheckPage';
+import AboutPage from './pages/about/about';
 
 // 인증 필요한 라우트 가드
 function PrivateRoute({ children, adminOnly = false }) {
@@ -44,6 +45,7 @@ function AppRoutes() {
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="magazine" element={<MagazinePage />} />
         <Route path="check" element={<CheckPage />} />
+        <Route path="about" element={<AboutPage />} />
 
         {/* 비로그인 전용 */}
         <Route path="login" element={<GuestRoute><LoginPage /></GuestRoute>} />

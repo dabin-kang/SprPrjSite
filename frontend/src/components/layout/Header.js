@@ -11,6 +11,7 @@ function Header() {
 
   const navLinks = [
     { path: '/', label: '홈' },
+    { path: '/about', label: '소   개' },
   // { path: '/events', label: '이벤트' },//
     { path: '/projects', label: '프로젝트' },
   //{ path: '/magazine', label: '매거진' },//
