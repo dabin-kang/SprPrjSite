@@ -18,20 +18,18 @@ function MainPage() {
     { number: '98%', label: '고객 만족도' },
   ];
 
-  const MainImages = useSignedUrls(['lunaRdv.png']);
+  const MainImages = useSignedUrls(['lunarRdv.png']);
 
   return (
     <div className="main-page">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
-          <div className="hero-shapes">
-            
-          </div>
+         
         </div>
         <div className="container hero-content">
           <div className="hero-text">
-            <img src={MainImages[0]?.signedUrl} />
+            <img  src={MainImages[0]?.signedUrl} className="main-images" />
             <h1 className="hero-title">
               혁신적인 디지털<br />
               <span className="accent">경험</span>을 만들다
