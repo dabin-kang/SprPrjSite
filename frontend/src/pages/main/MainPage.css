@@ -25,32 +25,7 @@
   opacity: 0.1;
 }
 
-.shape-1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #e94560 0%, transparent 70%);
-  top: -100px;
-  right: -100px;
-  animation: pulse 6s ease-in-out infinite;
-}
 
-.shape-2 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, #533483 0%, transparent 70%);
-  bottom: -80px;
-  left: -80px;
-  animation: pulse 8s ease-in-out infinite reverse;
-}
-
-.shape-3 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, #4361ee 0%, transparent 70%);
-  top: 50%;
-  left: 30%;
-  animation: pulse 5s ease-in-out infinite 2s;
-}
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); opacity: 0.1; }
@@ -100,24 +75,6 @@
   margin-bottom: 36px;
 }
 
-.hero-buttons {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.hero-visual {
-  position: relative;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-main-visual {
-  position: relative;
-  z-index: 1;
-}
 
 .visual-circle {
   width: 280px;

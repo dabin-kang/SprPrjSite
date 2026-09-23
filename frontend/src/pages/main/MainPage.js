@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './MainPage.css';
+import { useSignedUrls } from '../../hooks/useSignedUrl';
 
 function MainPage() {
   const features = [
@@ -17,20 +18,20 @@ function MainPage() {
     { number: '98%', label: '고객 만족도' },
   ];
 
+  const MainImages = useSignedUrls(['lunaRdv.png']);
+
   return (
     <div className="main-page">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
           <div className="hero-shapes">
-            <div className="shape shape-1" />
-            <div className="shape shape-2" />
-            <div className="shape shape-3" />
+            
           </div>
         </div>
         <div className="container hero-content">
           <div className="hero-text">
-            <span className="hero-badge">Creative Studio</span>
+            <img src={MainImages[0]?.signedUrl} />
             <h1 className="hero-title">
               혁신적인 디지털<br />
               <span className="accent">경험</span>을 만들다
@@ -39,32 +40,9 @@ function MainPage() {
               말랑뮤즈는 창의적인 아이디어와 최신 기술로<br />
               당신의 비전을 현실로 만드는 파트너입니다.
             </p>
-            <div className="hero-buttons">
-              <Link to="/projects" className="btn btn-primary btn-lg">프로젝트 보기</Link>
-              <Link to="/inquiry" className="btn btn-secondary btn-lg">문의하기</Link>
-            </div>
+            
           </div>
-          <div className="hero-visual">
-            <div className="hero-card floating">
-              <div className="hc-icon">💡</div>
-              <div>
-                <div className="hc-title">새로운 프로젝트</div>
-                <div className="hc-sub">AI 기반 솔루션</div>
-              </div>
-            </div>
-            <div className="hero-card floating-delay">
-              <div className="hc-icon">📊</div>
-              <div>
-                <div className="hc-title">성장하는 커뮤니티</div>
-                <div className="hc-sub">1,500+ 회원</div>
-              </div>
-            </div>
-            <div className="hero-main-visual">
-              <div className="visual-circle">
-                <span>말랑뮤즈</span>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </section>
 

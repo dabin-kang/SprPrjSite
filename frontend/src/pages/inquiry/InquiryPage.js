@@ -156,16 +156,6 @@ function InquiryPage() {
 
 
               <div className="contact-item">
-                <div className="contact-icon">☎</div>
-
-                <div className="contact-content">
-                  <span>PHONE</span>
-                  <strong>010-3756-3792</strong>
-                </div>
-              </div>
-
-
-              <div className="contact-item">
                 <div className="contact-icon">◷</div>
 
                 <div className="contact-content">
