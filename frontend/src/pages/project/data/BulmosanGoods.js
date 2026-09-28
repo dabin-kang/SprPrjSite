@@ -10,7 +10,12 @@ const project = {
   // Supabase Storage 이미지 경로 정보
   storage: {
     bucket: 'spr_sg',
-    path:'KakaoTalk_2026_bs.jpg',
+    paths: [
+      'KakaoTalk_2026_bs.jpg',
+      'FvDZIP7akAI7MZr.jpg',
+      '1682221947960.jpg',
+      '20231021_132925.jpg',
+    ],
   },
 
   intro: `
@@ -27,10 +32,7 @@ const project = {
   `,
 
   
-  storage: {
-    bucket: 'spr_sg',
-    path:'FvDZIP7akAI7MZr.jpg',
-  },
+
 
 
 

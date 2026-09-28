@@ -20,11 +20,10 @@ function ProjectDetailPage() {
     (item) => item.id === projectId
   );
 
-
+//이미지 여러개 배열로 처리한다
   const imagePaths =
-    project?.storage?.path
-      ? [project.storage.path]
-      : [];
+    project?.storage?.path || [];
+   
 
   const signedUrls = useSignedUrls(imagePaths);
 
