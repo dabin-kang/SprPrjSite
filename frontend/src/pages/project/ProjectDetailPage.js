@@ -3,12 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import './ProjectDetailPage.css';
 import ChangwonBiennaleMapPage from './ChangwonBiennaleMapPage.js';
 import  projects from'./data/ChangwonBiennale';
+import  bulmosan from'./data/BulmosanGoods.js';
 
 
-  
-const ChangwonBiennale = [
-  ChangwonBiennale,
-];
 
 
 function ProjectDetailPage() {

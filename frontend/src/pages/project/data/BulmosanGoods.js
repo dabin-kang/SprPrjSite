@@ -1,9 +1,5 @@
-
-
-
-
-
-  {
+const bulmosan =[
+    {
     id: 'bulmosan-goods',
     number: '02',
     title: '불모산 굿즈',
@@ -34,6 +30,10 @@
             `,
         }
     ]
-
   },
 ];
+
+export default bulmosan;
+
+
+
