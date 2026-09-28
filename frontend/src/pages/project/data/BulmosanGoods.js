@@ -26,6 +26,14 @@ const project = {
     일상에서 사용할 수 있는 상품을 디자인합니다.
   `,
 
+  
+  storage: {
+    bucket: 'spr_sg',
+    path:'FvDZIP7akAI7MZr.jpg',
+  },
+
+
+
   sections: [
     {
       title: '상품개발',

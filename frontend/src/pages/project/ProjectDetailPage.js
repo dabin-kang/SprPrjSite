@@ -38,7 +38,7 @@ function ProjectDetailPage() {
   const imageUrl =
     project?.image || supabaseImageUrl;
 
-    
+
   // 존재하지 않는 프로젝트
   if (!project) {
     return (
@@ -75,10 +75,16 @@ function ProjectDetailPage() {
 
 
       <section className="project-detail-image">
-        <img
-          src={project.image}
-          alt={project.title}
-        />
+        {imageUrl ? (
+    <img
+      src={imageUrl}
+      alt={project.title}
+    />
+    ) : (
+    <div className="project-detail-image-loading">
+      이미지를 불러오는 중입니다.
+    </div>
+    )}
       </section>
 
     
