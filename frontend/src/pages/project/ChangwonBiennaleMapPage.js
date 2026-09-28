@@ -7,15 +7,10 @@ import './ChangwonBiennaleMapPage.css';
  * 창원조각비엔날레 전시 공간 데이터
  * ============================================================
  *
- * 현재는 전시 공간을 먼저 표시합니다.
+ * 전시 공간은 현재 주소를 기준으로 지도에 표시합니다.
  *
- * 실제 작품 위치가 확인되면 ARTWORKS 배열에
- * 작품 데이터를 추가하면 됩니다.
- *
- * 주의:
- * 현재 입력된 장소 정보는 지도 기능 테스트용입니다.
- * 실제 2026 창원조각비엔날레 공식 전시 장소/작품 정보가
- * 확정되면 해당 데이터로 교체하세요.
+ * 전시 공간은 건물/시설 단위이기 때문에
+ * 주소를 Kakao Geocoder로 좌표로 변환합니다.
  */
 
 const VENUES = [
@@ -71,22 +66,86 @@ const VENUES = [
  * 작품 데이터
  * ============================================================
  *
- * 실제 작품 정보가 확인되면 이곳에 추가합니다.
+ * ★ 작품은 주소를 사용하지 않습니다.
  *
- * 예시:
+ * 실제 작품이 설치된 위치의
+ * latitude / longitude를 직접 입력합니다.
  *
- * {
- *   id: 'work-01',
- *   number: '01',
- *   title: '작품명',
- *   artist: '작가명',
- *   address: '정확한 작품 설치 주소',
- *   area: '창원',
- *   description: '작품 설명',
- * }
+ * latitude  = 위도
+ * longitude = 경도
+ *
+ * 예:
+ *
+ * latitude: 35.231095718953995,
+ * longitude: 128.68116468763225,
  */
 
-const ARTWORKS = [];
+const ARTWORKS = [
+  {
+    id: 'work-01',
+    number: '01',
+    title: '빗방울과의 입맞춤',
+    artist: '홍지윤',
+    venue: '성산아트홀',
+    area: '창원',
+
+    latitude: 35.231095718953995,
+    longitude: 128.68116468763225,
+
+    image:
+      '/images/projects/ChangwonBiennalePage/artworks/work-01.jpg',
+
+    description: '작품 설명',
+  },
+  {
+    id: 'work-02',
+    number: '02',
+    title: '0121-1110=115095',
+    artist: '이재효',
+    venue: '용지호수공원',
+    area: '창원',
+
+    latitude: 35.2304788172158,
+    longitude: 128.68178214283697,
+
+    image:
+      '/images/projects/ChangwonBiennalePage/artworks/work-01.jpg',
+
+    description: '작품 설명',
+  },
+  {
+    id: 'work-03',
+    number: '03',
+    title: '우리는 어디서 왔는가....',
+    artist: '이경호',
+    venue: '용지호수공원',
+    area: '창원',
+
+    latitude: 35.23367636632965,
+    longitude: 128.68215296107,
+
+    image:
+      '/images/projects/ChangwonBiennalePage/artworks/work-01.jpg',
+
+    description: '작품 설명',
+  },
+  {
+    id: 'work-04',
+    number: '04',
+    title: '밈모 팔라디노',
+    artist: 'Mimmo Paladino 이탈리아',
+    venue: '용지호수공원',
+    area: '창원',
+
+    latitude: 35.233837238901266,
+    longitude: 128.68184461005055,
+
+    image:
+      '/images/projects/ChangwonBiennalePage/artworks/work-01.jpg',
+
+    description: '작품 설명',
+  },
+];
 
 function ChangwonBiennaleMapPage() {
   const mapRef = useRef(null);
@@ -126,6 +185,7 @@ function ChangwonBiennaleMapPage() {
     /*
      * 이미 카카오맵 SDK가 로드되어 있는 경우
      */
+
     if (window.kakao && window.kakao.maps) {
       initializeKakaoMap();
       return;
@@ -134,6 +194,7 @@ function ChangwonBiennaleMapPage() {
     /*
      * 이미 다른 곳에서 SDK를 불러오고 있는 경우
      */
+
     const existingScript = document.querySelector(
       'script[data-kakao-map]'
     );
@@ -154,7 +215,11 @@ function ChangwonBiennaleMapPage() {
 
     /*
      * 카카오맵 SDK 새로 생성
+     *
+     * services 라이브러리는
+     * 전시 공간의 주소 → 좌표 변환을 위해 사용합니다.
      */
+
     const script = document.createElement('script');
 
     script.dataset.kakaoMap = 'true';
@@ -172,12 +237,11 @@ function ChangwonBiennaleMapPage() {
 
     document.head.appendChild(script);
 
-    return () => {
-      /*
-       * SDK 자체는 삭제하지 않습니다.
-       * 다른 페이지에서 다시 사용할 수 있기 때문입니다.
-       */
-    };
+    /*
+     * SDK 자체는 삭제하지 않습니다.
+     */
+
+    return undefined;
   }, []);
 
   /*
@@ -214,6 +278,7 @@ function ChangwonBiennaleMapPage() {
     /*
      * 지도가 만들어진 후 크기 다시 계산
      */
+
     setTimeout(() => {
       map.relayout();
     }, 100);
@@ -232,6 +297,20 @@ function ChangwonBiennaleMapPage() {
    * ============================================================
    * 마커 생성
    * ============================================================
+   *
+   * 전시 공간:
+   * address
+   * ↓
+   * Kakao Geocoder
+   * ↓
+   * 좌표
+   * ↓
+   * 마커
+   *
+   * 작품:
+   * latitude / longitude
+   * ↓
+   * 바로 마커 생성
    */
 
   useEffect(() => {
@@ -250,6 +329,7 @@ function ChangwonBiennaleMapPage() {
     /*
      * 기존 마커 제거
      */
+
     markersRef.current.forEach((marker) => {
       marker.setMap(null);
     });
@@ -263,23 +343,96 @@ function ChangwonBiennaleMapPage() {
         : ARTWORKS;
 
     /*
-     * 작품 데이터가 아직 없는 경우
+     * 데이터가 없는 경우
      */
+
     if (items.length === 0) {
       return;
     }
 
-    const geocoder =
-      new kakao.maps.services.Geocoder();
-
     const bounds =
       new kakao.maps.LatLngBounds();
 
-    let completedCount = 0;
+    /*
+     * ========================================================
+     * 작품
+     * ========================================================
+     *
+     * 작품은 주소 검색을 하지 않고
+     * 입력된 latitude / longitude를 그대로 사용합니다.
+     */
+
+    if (activeType === 'artwork') {
+      items.forEach((item) => {
+        /*
+         * 좌표가 없는 작품은 건너뜁니다.
+         */
+
+        if (
+          typeof item.latitude !== 'number' ||
+          typeof item.longitude !== 'number'
+        ) {
+          return;
+        }
+
+        const position =
+          new kakao.maps.LatLng(
+            item.latitude,
+            item.longitude
+          );
+
+        const marker =
+          new kakao.maps.Marker({
+            map,
+            position,
+            title: item.title,
+          });
+
+        markersRef.current.push(marker);
+
+        bounds.extend(position);
+
+        /*
+         * 작품 마커 클릭
+         */
+
+        kakao.maps.event.addListener(
+          marker,
+          'click',
+          () => {
+            setSelected(item);
+          }
+        );
+      });
+
+      /*
+       * 작품 좌표를 기준으로 지도 범위 조정
+       */
+
+      if (!bounds.isEmpty()) {
+        map.setBounds(bounds);
+
+        setTimeout(() => {
+          map.relayout();
+        }, 100);
+      }
+
+      return;
+    }
 
     /*
-     * 주소를 좌표로 변환
+     * ========================================================
+     * 전시 공간
+     * ========================================================
+     *
+     * 기존 방식 그대로 주소를 좌표로 변환합니다.
      */
+
+    const geocoder =
+      new kakao.maps.services.Geocoder();
+
+    let completedCount = 0;
+
     items.forEach((item) => {
       geocoder.addressSearch(
         item.address,
@@ -311,6 +464,7 @@ function ChangwonBiennaleMapPage() {
             /*
              * 마커 클릭
              */
+
             kakao.maps.event.addListener(
               marker,
               'click',
@@ -324,6 +478,7 @@ function ChangwonBiennaleMapPage() {
            * 모든 주소 검색이 끝난 뒤
            * 지도 범위를 한 번에 조정
            */
+
           if (
             completedCount === items.length &&
             !bounds.isEmpty()
@@ -343,6 +498,12 @@ function ChangwonBiennaleMapPage() {
    * ============================================================
    * 목록 클릭
    * ============================================================
+   *
+   * 전시 공간:
+   * address → Geocoder
+   *
+   * 작품:
+   * latitude / longitude 직접 사용
    */
 
   const handleItemClick = (item) => {
@@ -357,6 +518,41 @@ function ChangwonBiennaleMapPage() {
     }
 
     const kakao = window.kakao;
+
+    /*
+     * ========================================================
+     * 작품
+     * ========================================================
+     */
+
+    if (activeType === 'artwork') {
+      if (
+        typeof item.latitude !== 'number' ||
+        typeof item.longitude !== 'number'
+      ) {
+        return;
+      }
+
+      const position =
+        new kakao.maps.LatLng(
+          item.latitude,
+          item.longitude
+        );
+
+      mapInstanceRef.current.setCenter(
+        position
+      );
+
+      mapInstanceRef.current.setLevel(5);
+
+      return;
+    }
+
+    /*
+     * ========================================================
+     * 전시 공간
+     * ========================================================
+     */
 
     const geocoder =
       new kakao.maps.services.Geocoder();
@@ -393,14 +589,12 @@ function ChangwonBiennaleMapPage() {
 
   return (
     <main className="biennale-map-page">
-
       {/* ======================================================
           HEADER
       ====================================================== */}
 
       <section className="biennale-map-header">
         <div className="biennale-map-header-inner">
-
           <p className="page-label">
             CHANGWON SCULPTURE BIENNALE 2026
           </p>
@@ -414,7 +608,6 @@ function ChangwonBiennaleMapPage() {
             <br />
             지도 위에서 발견합니다.
           </p>
-
         </div>
       </section>
 
@@ -423,17 +616,13 @@ function ChangwonBiennaleMapPage() {
       ====================================================== */}
 
       <section className="biennale-map-section">
-
         <div className="biennale-map-layout">
-
           {/* ==================================================
               SIDEBAR
           ================================================== */}
 
           <aside className="biennale-map-sidebar">
-
             <div className="map-sidebar-intro">
-
               <span className="map-eyebrow">
                 RESONANCE FIELD
               </span>
@@ -446,13 +635,11 @@ function ChangwonBiennaleMapPage() {
                 2026 창원조각비엔날레는
                 도시 곳곳의 공간을 연결합니다.
               </p>
-
             </div>
 
             {/* 탭 */}
 
             <div className="map-tabs">
-
               <button
                 type="button"
                 className={
@@ -480,17 +667,13 @@ function ChangwonBiennaleMapPage() {
               >
                 작품
               </button>
-
             </div>
 
             {/* 장소 목록 */}
 
             <div className="map-list">
-
               {items.length === 0 ? (
-
                 <div className="map-empty">
-
                   <span className="map-empty-number">
                     +
                   </span>
@@ -503,13 +686,9 @@ function ChangwonBiennaleMapPage() {
                     작품명·작가·설치 위치가
                     확인되면 지도에 추가됩니다.
                   </p>
-
                 </div>
-
               ) : (
-
                 items.map((item) => (
-
                   <button
                     type="button"
                     key={item.id}
@@ -524,13 +703,11 @@ function ChangwonBiennaleMapPage() {
                       handleItemClick(item)
                     }
                   >
-
                     <span className="map-list-number">
                       {item.number}
                     </span>
 
                     <span className="map-list-content">
-
                       <strong>
                         {item.title || item.name}
                       </strong>
@@ -546,14 +723,10 @@ function ChangwonBiennaleMapPage() {
                           {item.area}
                         </small>
                       )}
-
                     </span>
-
                   </button>
-
                 ))
               )}
-
             </div>
 
             {/* 뒤로가기 */}
@@ -564,7 +737,6 @@ function ChangwonBiennaleMapPage() {
             >
               ← 비엔날레 프로젝트
             </Link>
-
           </aside>
 
           {/* ==================================================
@@ -572,11 +744,8 @@ function ChangwonBiennaleMapPage() {
           ================================================== */}
 
           <div className="biennale-map-area">
-
             {mapError ? (
-
               <div className="map-error">
-
                 <span className="map-error-label">
                   MAP
                 </span>
@@ -600,26 +769,20 @@ function ChangwonBiennaleMapPage() {
                   로컬 .env 파일에 등록하면
                   실제 지도가 표시됩니다.
                 </p>
-
               </div>
-
             ) : (
-
               <div
                 ref={mapRef}
                 className="kakao-map"
               />
-
             )}
 
             {/* =================================================
-                선택된 장소 카드
+                선택된 장소 / 작품 카드
             ================================================= */}
 
             {selected && (
-
               <div className="map-detail-card">
-
                 <button
                   type="button"
                   className="map-detail-close"
@@ -652,20 +815,25 @@ function ChangwonBiennaleMapPage() {
                   {selected.description}
                 </p>
 
-                <p className="map-detail-address">
-                  {selected.address}
-                </p>
+                {selected.address && (
+                  <p className="map-detail-address">
+                    {selected.address}
+                  </p>
+                )}
 
+                {selected.latitude !== undefined &&
+                  selected.longitude !== undefined && (
+                    <p className="map-detail-address">
+                      {selected.latitude.toFixed(6)}
+                      {' , '}
+                      {selected.longitude.toFixed(6)}
+                    </p>
+                  )}
               </div>
-
             )}
-
           </div>
-
         </div>
-
       </section>
-
     </main>
   );
 }

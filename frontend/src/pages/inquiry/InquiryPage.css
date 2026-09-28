@@ -384,7 +384,8 @@
   border-radius: 6px;
 
   background: var(--primary);
-  color: #fff;
+  background-color: #cee934;
+  color: rgb(0,0,0);
 
   font-family: inherit;
   font-size: 13px;

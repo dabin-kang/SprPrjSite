@@ -16,6 +16,7 @@ function MainPage() {
     '20240524_201604.jpg',
     'KakaoTalk_2026_bs.jpg',
     'spr_home/captured-image-1749302385996.jpg',
+    '20260927_215436(0).jpg',
   ];
 
   const MainImages = useSignedUrls(imagePaths);
@@ -407,40 +408,15 @@ function MainPage() {
 
           <div className="text-center">
             <h2 className="section-title">
-              우리가 제공하는 것
+              
             </h2>
 
             <p className="section-subtitle">
-              창원조각비엔날레 조각지도
+              
             </p>
           </div>
 
-          <div className="features-grid">
-
-            {features.map((f, i) => (
-              <div
-                key={i}
-                className="feature-card card"
-              >
-                <div className="card-body">
-
-                  <div className="feature-icon">
-                    {f.icon}
-                  </div>
-
-                  <h3 className="card-title">
-                    {f.title}
-                  </h3>
-
-                  <p className="card-text">
-                    {f.desc}
-                  </p>
-
-                </div>
-              </div>
-            ))}
-
-          </div>
+          
         </div>
       </section>
 

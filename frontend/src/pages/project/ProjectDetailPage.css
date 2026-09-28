@@ -58,6 +58,11 @@
 
 /* CONTENT */
 
+.project-detail-content {
+  white-space: pre-line;
+  text-align: center;
+}
+
 .project-content-section {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
