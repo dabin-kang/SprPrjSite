@@ -4,6 +4,7 @@ import './ProjectDetailPage.css';
 import ChangwonBiennaleMapPage from './ChangwonBiennaleMapPage.js';
 import  ChangwonBiennale from'./data/ChangwonBiennale';
 import   BulmosanGoods from'./data/BulmosanGoods.js';
+import { useSignedUrls } from '../../hooks/useSignedUrl.js';
 
 
 const projects = [
@@ -19,6 +20,25 @@ function ProjectDetailPage() {
     (item) => item.id === projectId
   );
 
+
+  const imagePaths =
+    project?.storage?.path
+      ? [project.storage.path]
+      : [];
+
+  const signedUrls = useSignedUrls(imagePaths);
+
+  const supabaseImageUrl =
+    signedUrls?.[0]?.signedUrl || null;
+
+  /*
+   * 기존 프로젝트는 image를 사용하고,
+   * 불모산 굿즈는 Supabase 이미지를 사용합니다.
+   */
+  const imageUrl =
+    project?.image || supabaseImageUrl;
+
+    
   // 존재하지 않는 프로젝트
   if (!project) {
     return (
