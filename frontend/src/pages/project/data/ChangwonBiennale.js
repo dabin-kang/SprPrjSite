@@ -1,5 +1,5 @@
 
-const projects = [
+const project = 
   {
     id: 'changwon-biennale',
     number: '01',
@@ -31,7 +31,7 @@ const projects = [
 
 
     `,
-  },
-];
+  };
+
   
-  export default projects;
+  export default project;

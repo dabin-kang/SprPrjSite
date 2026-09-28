@@ -2,6 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './MainPage.css';
 import { useSignedUrls } from '../../hooks/useSignedUrl';
+import ChangwonBiennale from '../project/data/ChangwonBiennale';
+import BulmosanGoods from '../project/data/BulmosanGoods';
+
+
+const projects = [
+  ChangwonBiennale,
+  BulmosanGoods,
+];
 
 function MainPage() {
   // ============================================
@@ -19,8 +27,8 @@ function MainPage() {
     '20260927_215436(0).jpg',
   ];
 
-  const MainImages = useSignedUrls(imagePaths);
 
+  const MainImages = useSignedUrls(imagePaths);
   // ============================================
   // 슬라이드 상태
   // ============================================
@@ -213,38 +221,7 @@ function MainPage() {
     setCurrentIndex(index);
   };
 
-  // ============================================
-  // 기존 페이지 데이터
-  // ============================================
-  const features = [
-    {
-      icon: '🚀',
-      title: '혁신적인 프로젝트',
-      desc: '최신 기술 스택을 활용한 창의적인 솔루션을 제공합니다.',
-    },
-    {
-      icon: '📰',
-      title: '업계 인사이트',
-      desc: '매거진을 통해 최신 트렌드와 깊은 인사이트를 공유합니다.',
-    },
-    {
-      icon: '🎯',
-      title: '맞춤형 이벤트',
-      desc: '다양한 이벤트와 프로그램으로 고객과 소통합니다.',
-    },
-    {
-      icon: '💬',
-      title: '빠른 문의 대응',
-      desc: '신속하고 정확한 답변으로 최상의 고객 경험을 제공합니다.',
-    },
-  ];
-
-  const stats = [
-    { number: '200+', label: '완료 프로젝트' },
-    { number: '1,500+', label: '회원 수' },
-    { number: '50+', label: '매거진 아티클' },
-    { number: '98%', label: '고객 만족도' },
-  ];
+  
 
   return (
     <div className="main-page">
@@ -424,86 +401,56 @@ function MainPage() {
       {/* ============================================
           Projects Preview
       ============================================ */}
-      <section className="section events-preview">
+      <div className="preview-cards">
 
-        <div className="container">
+  {projects.map((project) => (
 
-          <div className="section-header">
+    <div
+      key={project.id}
+      className="preview-card card"
+    >
 
-            <div>
-              <h2 className="section-title">
-                프로젝트
-              </h2>
+      {/* 프로젝트 이미지 */}
+      <div className="preview-img">
 
-              <p className="section-subtitle">
-                말랑뮤즈가 만들어가는 프로젝트
-              </p>
-            </div>
+        <img
+          src={project.image}
+          alt={project.title}
+        />
 
-            <Link
-              to="/projects"
-              className="btn btn-secondary"
-            >
-              전체 보기 →
-            </Link>
-
-          </div>
+      </div>
 
 
-          <div className="preview-cards">
+      {/* 프로젝트 정보 */}
+      <div className="card-body">
 
-            {[1, 2, 3].map((i) => (
+        <span className="badge badge-success">
+          PROJECT {project.number}
+        </span>
 
-              <div
-                key={i}
-                className="preview-card card"
-              >
+        <h3 className="card-title">
+          {project.title}
+        </h3>
 
-                <div
-                  className="preview-img"
-                  style={{
-                    background: `hsl(${i * 80}, 60%, 70%)`,
-                  }}
-                >
-                  <span>
-                    PROJECT {i}
-                  </span>
-                </div>
+        <p className="card-text">
+          {project.description}
+        </p>
 
-                <div className="card-body">
+        <Link
+          to={`/projects/${project.id}`}
+          className="btn btn-sm btn-primary"
+          style={{ marginTop: '12px' }}
+        >
+          자세히 보기
+        </Link>
 
-                  <span className="badge badge-success">
-                    진행중
-                  </span>
+      </div>
 
-                  <h3 className="card-title">
-                    말랑뮤즈 프로젝트 {i}호
-                  </h3>
+    </div>
 
-                  <p className="card-text">
-                    다양한 지역과 사람들의 이야기를
-                    새로운 경험으로 만들어갑니다.
-                  </p>
+  ))}
 
-                  <Link
-                    to="/projects"
-                    className="btn btn-sm btn-primary"
-                    style={{ marginTop: '12px' }}
-                  >
-                    자세히 보기
-                  </Link>
-
-                </div>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </section>
+</div>
 
 
       {/* ============================================

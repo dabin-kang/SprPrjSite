@@ -1,4 +1,4 @@
-const bulmosan =[
+const project =
     {
     id: 'bulmosan-goods',
     number: '02',
@@ -30,10 +30,9 @@ const bulmosan =[
             `,
         }
     ]
-  },
-];
+  };
 
-export default bulmosan;
+export default project;
 
 
 
