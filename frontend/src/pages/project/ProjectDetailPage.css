@@ -20,9 +20,10 @@
   line-height: 1.1;
 }
 
-.project-subtitle {
+.project-detail-description {
   color: var(--text-gray);
   font-size: 18px;
+  line-height: 1.7;
 }
 
 
@@ -53,11 +54,8 @@
 
 .bulmosan-slider {
   width: 100%;
-  margin: 0 auto 100px;
+  margin: 0 auto 110px;
 }
-
-
-/* 이미지 전체 영역 */
 
 .bulmosan-slider-stage {
   position: relative;
@@ -66,7 +64,6 @@
   max-width: 1100px;
 
   height: min(68vw, 680px);
-
   min-height: 420px;
 
   margin: 0 auto;
@@ -82,15 +79,9 @@
   cursor: grab;
 }
 
-
-/* 드래그 중 */
-
 .bulmosan-slider-stage.is-dragging {
   cursor: grabbing;
 }
-
-
-/* 실제 이미지 */
 
 .bulmosan-slider-stage > img {
   width: 100%;
@@ -144,26 +135,21 @@
     transform 0.2s ease;
 }
 
-
 .bulmosan-slider-button:hover {
   background: #fff;
 }
-
 
 .bulmosan-slider-button:active {
   transform: translateY(-50%) scale(0.94);
 }
 
-
 .bulmosan-slider-button.prev {
   left: 20px;
 }
 
-
 .bulmosan-slider-button.next {
   right: 20px;
 }
-
 
 .bulmosan-slider-button svg {
   width: 24px;
@@ -185,7 +171,6 @@
   letter-spacing: 0.12em;
 }
 
-
 .bulmosan-slider-counter span {
   margin: 0 8px;
 
@@ -201,14 +186,12 @@
   display: flex;
 
   justify-content: center;
-
   align-items: center;
 
   gap: 8px;
 
   margin-top: 14px;
 }
-
 
 .bulmosan-slider-dots button {
   width: 6px;
@@ -228,7 +211,6 @@
     width 0.2s ease,
     background 0.2s ease;
 }
-
 
 .bulmosan-slider-dots button.active {
   width: 20px;
@@ -251,12 +233,24 @@
   display: flex;
 
   align-items: center;
-
   justify-content: center;
 
   color: #888;
 
   font-size: 14px;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.project-detail-content {
+  white-space: pre-line;
+
+  text-align: center;
+
+  margin-bottom: 90px;
 }
 
 
@@ -274,19 +268,14 @@
   font-size: 24px;
 
   line-height: 1.8;
+
+  white-space: pre-line;
 }
 
 
 /* =========================================================
-   CONTENT
+   일반 PROJECT SECTION
    ========================================================= */
-
-.project-detail-content {
-  white-space: pre-line;
-
-  text-align: center;
-}
-
 
 .project-content-section {
   display: grid;
@@ -298,25 +287,25 @@
   margin-bottom: 140px;
 }
 
-
 .project-content-text {
   padding-top: 10px;
 }
 
-
 .section-number {
+  margin: 0 0 18px;
+
   font-size: 13px;
 
   letter-spacing: 0.15em;
 }
 
-
 .project-content-text h2 {
+  margin: 0 0 20px;
+
   font-size: 32px;
 
-  margin: 20px 0;
+  line-height: 1.2;
 }
-
 
 .project-content-text > p:last-child {
   color: var(--text-gray);
@@ -328,13 +317,136 @@
 
 
 /* =========================================================
+   상품개발 SECTION
+   ========================================================= */
+
+.project-products-section {
+  margin-bottom: 150px;
+}
+
+.project-products-section > .project-content-text {
+  max-width: 720px;
+
+  margin-bottom: 70px;
+}
+
+
+/* =========================================================
+   상품 목록
+   ========================================================= */
+
+.bulmosan-products {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 110px;
+}
+
+
+/* =========================================================
+   개별 상품
+   ========================================================= */
+
+.bulmosan-product {
+  display: grid;
+
+  grid-template-columns: 1fr 1.5fr;
+
+  gap: 60px;
+
+  align-items: start;
+}
+
+.bulmosan-product-info {
+  padding-top: 10px;
+}
+
+.bulmosan-product-number {
+  margin: 0 0 18px;
+
+  font-size: 12px;
+
+  letter-spacing: 0.15em;
+
+  color: #999;
+}
+
+.bulmosan-product-info h3 {
+  margin: 0 0 18px;
+
+  font-size: 28px;
+
+  line-height: 1.3;
+
+  font-weight: 500;
+}
+
+.bulmosan-product-info > p:last-child {
+  margin: 0;
+
+  color: var(--text-gray);
+
+  line-height: 1.8;
+
+  white-space: pre-line;
+}
+
+
+/* =========================================================
+   상품 이미지
+   ========================================================= */
+
+.bulmosan-product-image {
+  width: 100%;
+
+  min-height: 300px;
+
+  background: #f7f7f7;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.bulmosan-product-image img {
+  width: 100%;
+
+  max-width: 760px;
+
+  max-height: 600px;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+}
+
+.product-image-loading {
+  min-height: 300px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #888;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
    CONTENT IMAGE
    ========================================================= */
 
 .project-content-image {
   text-align: center;
 }
-
 
 .project-content-image img {
   width: 100%;
@@ -354,28 +466,6 @@
 
 
 /* =========================================================
-   BACK
-   ========================================================= */
-
-.project-detail-navigation {
-  padding-top: 60px;
-
-  border-top: 1px solid #ddd;
-}
-
-
-.project-detail-navigation a {
-  color: inherit;
-
-  text-decoration: none;
-
-  font-size: 13px;
-
-  letter-spacing: 0.1em;
-}
-
-
-/* =========================================================
    CHANGWON BIENNALE MAP LINK
    ========================================================= */
 
@@ -384,7 +474,6 @@
 
   margin: -40px auto 100px;
 }
-
 
 .project-map-link {
   display: flex;
@@ -408,13 +497,11 @@
     background 0.2s ease;
 }
 
-
 .project-map-link:hover {
   background: #222;
 
   transform: translateY(-2px);
 }
-
 
 .project-map-link span {
   font-size: 10px;
@@ -424,11 +511,31 @@
   opacity: 0.55;
 }
 
-
 .project-map-link strong {
   font-size: 15px;
 
   font-weight: 500;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.project-detail-navigation {
+  padding-top: 60px;
+
+  border-top: 1px solid #ddd;
+}
+
+.project-detail-navigation a {
+  color: inherit;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  letter-spacing: 0.1em;
 }
 
 
@@ -442,20 +549,24 @@
     padding: 60px 20px;
   }
 
+  .project-detail-header {
+    margin-bottom: 45px;
+  }
 
   .project-detail-header h1 {
     font-size: 42px;
   }
 
-
-  /* -----------------------------------------
-     모바일 슬라이더
-     ----------------------------------------- */
-
-  .bulmosan-slider {
-    margin-bottom: 70px;
+  .project-detail-description {
+    font-size: 16px;
   }
 
+
+  /* 모바일 슬라이더 */
+
+  .bulmosan-slider {
+    margin-bottom: 75px;
+  }
 
   .bulmosan-slider-stage {
     height: 75vw;
@@ -465,23 +576,19 @@
     max-height: 500px;
   }
 
-
   .bulmosan-slider-button {
     width: 44px;
 
     height: 44px;
   }
 
-
   .bulmosan-slider-button.prev {
     left: 10px;
   }
 
-
   .bulmosan-slider-button.next {
     right: 10px;
   }
-
 
   .bulmosan-slider-button svg {
     width: 20px;
@@ -490,25 +597,76 @@
   }
 
 
-  .project-detail-image img {
-    max-width: 100%;
+  /* 본문 */
 
-    max-height: 450px;
+  .project-detail-content {
+    margin-bottom: 60px;
   }
 
-
-  .project-content-section {
-    grid-template-columns: 1fr;
-
-    gap: 30px;
+  .project-detail-intro {
+    margin-bottom: 80px;
   }
-
 
   .project-detail-intro p {
     font-size: 20px;
   }
 
 
+  /* 일반 섹션 */
+
+  .project-content-section {
+    grid-template-columns: 1fr;
+
+    gap: 30px;
+
+    margin-bottom: 90px;
+  }
+
+
+  /* 상품개발 */
+
+  .project-products-section {
+    margin-bottom: 100px;
+  }
+
+  .project-products-section > .project-content-text {
+    margin-bottom: 45px;
+  }
+
+  .bulmosan-products {
+    gap: 70px;
+  }
+
+  .bulmosan-product {
+    grid-template-columns: 1fr;
+
+    gap: 30px;
+  }
+
+  .bulmosan-product-info {
+    padding-top: 0;
+  }
+
+  .bulmosan-product-info h3 {
+    font-size: 24px;
+  }
+
+  .bulmosan-product-image {
+    min-height: 240px;
+  }
+
+  .bulmosan-product-image img {
+    max-height: 450px;
+  }
+
+  .product-image-loading {
+    min-height: 240px;
+  }
+
+
+  /* 일반 이미지 */
+
+  .project-detail-image img,
   .project-content-image img {
     max-width: 100%;
 
@@ -516,10 +674,11 @@
   }
 
 
+  /* 지도 버튼 */
+
   .project-map-link-section {
     margin: -20px auto 70px;
   }
-
 
   .project-map-link {
     flex-direction: column;
@@ -530,7 +689,6 @@
 
     padding: 22px;
   }
-
 
   .project-map-link strong {
     font-size: 14px;
