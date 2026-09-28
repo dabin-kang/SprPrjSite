@@ -39,11 +39,35 @@ const project = {
   sections: [
     {
       title: '상품개발',
-      text: `
-        1. 불모산 석고 방향제
-        2. 성주사 곰모형 종
-        3. 돌탑 모형
-      `,
+
+      products: [
+        {
+          title: '불모산 석고 방향제',
+          text: `
+            불모산의 형태를 모티브로 제작한
+            석고 방향제입니다.
+          `,
+          image: 'KakaoTalk_2026_bs.jpg',
+        },
+
+        {
+          title: '성주사 곰모형 종',
+          text: `
+            성주사와 불모산의 이야기를 담은
+            곰 모형 풍경입니다.
+          `,
+          image: 'FvDZIP7akAI7MZr.jpg',
+        },
+
+        {
+          title: '돌탑 모형',
+          text: `
+            불모산과 성주사의 돌탑에서 착안한
+            작은 오브제 상품입니다.
+          `,
+          image: 'FvDZIP7akAI7MZr.jpg',
+        },
+      ],
     },
   ],
 };
