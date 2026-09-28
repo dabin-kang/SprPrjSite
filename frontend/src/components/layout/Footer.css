@@ -53,11 +53,7 @@
   color: var(--accent);
 }
 
-.footer-contact p {
-  font-size: 0.88rem;
-  color: rgba(255,255,255);
-  margin-bottom: 8px;
-}
+
 
 .footer-bottom {
   padding-top: 24px;

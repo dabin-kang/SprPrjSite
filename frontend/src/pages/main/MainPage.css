@@ -8,19 +8,21 @@
 
 
 /* =========================================================
-   FULL WIDTH HERO SLIDER
+   HERO SLIDER
 ========================================================= */
 
 .hero-slider {
   position: relative;
+
   width: 100%;
   height: calc(100vh - 80px);
   min-height: 600px;
+
   overflow: hidden;
 
-  cursor: grab;
-
   background: #111;
+
+  cursor: grab;
 
   user-select: none;
   -webkit-user-select: none;
@@ -39,10 +41,12 @@
 
 .slider-track {
   display: flex;
+
   width: 100%;
   height: 100%;
 
-  transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+  transition:
+    transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .hero-slider.dragging .slider-track {
@@ -51,7 +55,7 @@
 
 
 /* =========================================================
-   EACH SLIDE
+   SLIDE
 ========================================================= */
 
 .slide {
@@ -69,7 +73,7 @@
 
 
 /* =========================================================
-   IMAGE
+   SLIDE IMAGE
 ========================================================= */
 
 .slide img {
@@ -83,24 +87,18 @@
   pointer-events: none;
 
   user-select: none;
-
   -webkit-user-drag: none;
 
   transition: transform 1.2s ease;
 }
 
-
-/*
-  현재 이미지가 화면에 들어올 때
-  살짝 확대되는 효과
-*/
 .slide:hover img {
   transform: scale(1.02);
 }
 
 
 /* =========================================================
-   DARK OVERLAY
+   SLIDE OVERLAY
 ========================================================= */
 
 .slide-overlay {
@@ -121,7 +119,7 @@
 
 
 /* =========================================================
-   SLIDE TEXT
+   SLIDE CONTENT
 ========================================================= */
 
 .slide-content {
@@ -156,7 +154,6 @@
   margin: 0 0 16px;
 
   font-size: clamp(3rem, 6vw, 6.5rem);
-
   font-weight: 800;
 
   line-height: 0.95;
@@ -169,7 +166,6 @@
   margin: 0;
 
   font-size: 1.05rem;
-
   line-height: 1.8;
 
   color: rgba(255, 255, 255, 0.85);
@@ -177,17 +173,17 @@
 
 
 /* =========================================================
-   EMPTY STATE
+   EMPTY SLIDE
 ========================================================= */
 
 .slide-empty {
-  width: 100%;
-  height: 100%;
-
   display: flex;
 
   align-items: center;
   justify-content: center;
+
+  width: 100%;
+  height: 100%;
 
   background: #111;
 
@@ -198,30 +194,27 @@
 
 
 /* =========================================================
-   SLIDER ARROW BUTTON
+   SLIDER BUTTON
 ========================================================= */
 
 .slider-button {
   position: absolute;
-
   top: 50%;
-
   z-index: 10;
-
-  transform: translateY(-50%);
-
-  width: 58px;
-  height: 58px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
+  width: 58px;
+  height: 58px;
+
   padding: 0;
 
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  transform: translateY(-50%);
 
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 50%;
 
   background: rgba(0, 0, 0, 0.2);
@@ -245,11 +238,11 @@
 
 
 .slider-button:hover {
+  transform: translateY(-50%) scale(1.08);
+
   background: rgba(0, 0, 0, 0.55);
 
   border-color: rgba(255, 255, 255, 0.8);
-
-  transform: translateY(-50%) scale(1.08);
 }
 
 
@@ -264,7 +257,7 @@
 
 
 /* =========================================================
-   BOTTOM SLIDER UI
+   SLIDER BOTTOM
 ========================================================= */
 
 .slider-bottom {
@@ -289,7 +282,7 @@
 
 
 /* =========================================================
-   COUNTER
+   SLIDER COUNTER
 ========================================================= */
 
 .slider-counter {
@@ -318,7 +311,7 @@
 
 
 /* =========================================================
-   DOTS
+   SLIDER DOTS
 ========================================================= */
 
 .slider-dots {
@@ -378,88 +371,11 @@
 
 
 /* =========================================================
-   STATS
+   PROJECTS SECTION
 ========================================================= */
 
-.stats-section {
-  background: white;
-
-  padding: 50px 0;
-
-  border-bottom: 1px solid var(--border-light);
-}
-
-
-.stats-grid {
-  display: grid;
-
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 20px;
-}
-
-
-.stat-item {
-  text-align: center;
-
-  padding: 20px;
-}
-
-
-.stat-number {
-  font-size: 2.5rem;
-
-  font-weight: 800;
-
-  color: var(--accent);
-
-  line-height: 1;
-
-  margin-bottom: 6px;
-}
-
-
-.stat-label {
-  font-size: 0.88rem;
-
-  color: var(--text-gray);
-
-  font-weight: 400;
-}
-
-
-/* =========================================================
-   FEATURES
-========================================================= */
-
-.features-section {
+.projects-section {
   background: var(--bg);
-}
-
-
-.text-center {
-  text-align: center;
-}
-
-
-.features-grid {
-  display: grid;
-
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 24px;
-}
-
-
-.feature-card {
-  text-align: center;
-}
-
-
-.feature-icon {
-  font-size: 2.4rem;
-
-  margin-bottom: 16px;
 }
 
 
@@ -467,49 +383,176 @@
    SECTION HEADER
 ========================================================= */
 
-.section-header {
+.projects-section .container{
+  margin-top: 70px;
+}
+
+
+.projects-section .section-header {
   display: flex;
 
-  justify-content: space-between;
-
   align-items: flex-end;
+  justify-content: space-between;
 
   margin-bottom: 40px;
 }
 
 
-.section-header .section-subtitle {
-  margin-bottom: 0;
+.projects-section .section-label {
+  margin: 0 0 10px;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  letter-spacing: 3px;
+
+  color: var(--accent);
+}
+
+
+.projects-section .section-title {
+  margin: 0 0 12px;
+
+  font-size: 2.4rem;
+  font-weight: 700;
+
+  letter-spacing: -1px;
+}
+
+
+.projects-section .section-subtitle {
+  margin: 0;
+
+  font-size: 1rem;
+
+  line-height: 1.7;
+
+  color: var(--text-gray);
 }
 
 
 /* =========================================================
-   PROJECT PREVIEW
+   PROJECT CARDS
 ========================================================= */
 
 .preview-cards {
   display: grid;
 
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 
   gap: 28px;
 }
 
 
+/* =========================================================
+   PROJECT CARD
+========================================================= */
+
+.preview-card {
+  overflow: hidden;
+
+  background: white;
+
+  border-radius: 12px;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+.preview-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.1);
+}
+
+
+/* =========================================================
+   PROJECT IMAGE
+========================================================= */
+
 .preview-img {
-  height: 180px;
+  position: relative;
 
-  display: flex;
+  width: 100%;
 
-  align-items: center;
+  aspect-ratio: 16 / 10;
 
-  justify-content: center;
+  overflow: hidden;
 
-  font-size: 1.2rem;
+  background: #f2f2f2;
+}
 
+
+.preview-img img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition:
+    transform 0.5s ease;
+}
+
+
+.preview-card:hover .preview-img img {
+  transform: scale(1.04);
+}
+
+
+/* =========================================================
+   PROJECT CARD BODY
+========================================================= */
+
+.preview-card .card-body {
+  padding: 26px;
+}
+
+
+.preview-card .badge {
+  display: inline-block;
+
+  margin-bottom: 12px;
+}
+
+
+.preview-card .card-title {
+  margin: 0 0 10px;
+
+  font-size: 1.35rem;
   font-weight: 700;
 
-  color: white;
+  letter-spacing: -0.5px;
+}
+
+
+.preview-card .card-text {
+  margin: 0;
+
+  min-height: 48px;
+
+  font-size: 0.95rem;
+
+  line-height: 1.7;
+
+  color: var(--text-gray);
+}
+
+
+/* =========================================================
+   PROJECT DETAIL BUTTON
+========================================================= */
+
+.project-detail-button {
+  display: inline-flex;
+
+  margin-top: 18px;
+
+  align-items: center;
 }
 
 
@@ -518,14 +561,14 @@
 ========================================================= */
 
 .cta-section {
+  padding: 100px 0;
+
   background:
     linear-gradient(
       135deg,
       var(--accent) 0%,
       #c73652 100%
     );
-
-  padding: 100px 0;
 }
 
 
@@ -537,33 +580,37 @@
 
 
 .cta-content h2 {
+  margin: 0 0 16px;
+
   font-size: 2.5rem;
-
   font-weight: 700;
-
-  margin-bottom: 16px;
 }
 
 
 .cta-content p {
+  margin: 0 0 36px;
+
   font-size: 1.1rem;
 
   opacity: 0.9;
-
-  margin-bottom: 36px;
 }
 
 
 .cta-buttons {
   display: flex;
 
-  gap: 16px;
-
+  align-items: center;
   justify-content: center;
+
+  gap: 16px;
 
   flex-wrap: wrap;
 }
 
+
+/* =========================================================
+   CTA BUTTON
+========================================================= */
 
 .cta-section .btn-primary {
   background: white;
@@ -603,23 +650,7 @@
 
   .hero-slider {
     height: 75vh;
-
     min-height: 520px;
-  }
-
-
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-
-  .preview-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 
 
@@ -633,6 +664,11 @@
     right: 7%;
   }
 
+
+  .preview-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
 }
 
 
@@ -644,7 +680,6 @@
 
   .hero-slider {
     height: 72vh;
-
     min-height: 480px;
   }
 
@@ -656,7 +691,6 @@
 
   .slide-content {
     left: 7%;
-
     bottom: 18%;
   }
 
@@ -696,7 +730,6 @@
   .slider-bottom {
     left: 7%;
     right: 7%;
-
     bottom: 25px;
 
     gap: 16px;
@@ -725,13 +758,13 @@
   }
 
 
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .projects-section .section-title {
+    font-size: 2rem;
   }
 
 
-  .features-grid {
-    grid-template-columns: 1fr;
+  .projects-section .section-subtitle {
+    font-size: 0.9rem;
   }
 
 
@@ -740,17 +773,23 @@
   }
 
 
-  .section-header {
-    flex-direction: column;
+  .preview-card .card-body {
+    padding: 22px;
+  }
 
-    align-items: flex-start;
 
-    gap: 16px;
+  .cta-section {
+    padding: 80px 0;
   }
 
 
   .cta-content h2 {
     font-size: 1.8rem;
+  }
+
+
+  .cta-content p {
+    font-size: 0.95rem;
   }
 
 }
@@ -764,7 +803,6 @@
 
   .hero-slider {
     height: 65vh;
-
     min-height: 430px;
   }
 
@@ -799,6 +837,21 @@
 
   .slider-bottom {
     bottom: 20px;
+  }
+
+
+  .projects-section .section-title {
+    font-size: 1.7rem;
+  }
+
+
+  .preview-card .card-body {
+    padding: 20px;
+  }
+
+
+  .preview-card .card-title {
+    font-size: 1.2rem;
   }
 
 }

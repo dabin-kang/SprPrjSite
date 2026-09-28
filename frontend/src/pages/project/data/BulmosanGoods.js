@@ -1,3 +1,10 @@
+import { useSignedUrls } from '../../hooks/useSignedUrl';
+
+
+const getImageUrl = (path) => {
+  return `${SUPABASE_URL}/storage/v1/object/public/project-images/${path}`;
+};
+
 const project =
     {
     id: 'bulmosan-goods',
