@@ -25,12 +25,22 @@ const projects = [
   {
     id: 'lantern-project',
     number: '03',
-    title: '인터넷 소원연등 프로젝트',
+    title: '인터넷 소원연등 ',
     description: '인터넷 소원연등 프로젝트',
     storage: {
       bucket: 'spr_sg',
       path: '20231021_132925.jpg',
-      link:'/lantern',
+    },
+    link:'/lantern',
+  },
+  {
+    id: 'parting-project',
+    number: '04',
+    title: '이별 극복',
+    description: '인터넷 소원연등 프로젝트',
+    storage: {
+      bucket: 'spr_sg',
+      path: '20240524_201604.jpg',
     },
   },
 ];
@@ -76,7 +86,7 @@ function ProjectPage() {
           return (
             <Link
               key={project.id}
-              to={`/projects/${project.id}`}
+              to={project.link || `/projects/${project.id}`}
               className="proj-card"
             >
               <div className="proj-thumbnail">
