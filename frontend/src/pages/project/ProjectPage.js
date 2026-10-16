@@ -29,7 +29,8 @@ const projects = [
     description: '인터넷 소원연등 프로젝트',
     storage: {
       bucket: 'spr_sg',
-      path: BulmosanGoods.storage?.paths?.[0] || null,
+      path: '20231021_132925.jpg',
+      link:'/lantern',
     },
   },
 ];
