@@ -1,3 +1,4 @@
+
 .projects-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -56,6 +57,29 @@
   transform: scale(1.04);
 }
 
+.proj-thumbnail-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.proj-image-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #555;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
 .proj-num {
   position: absolute;
   left: 20px;
@@ -87,6 +111,10 @@
 }
 
 @media (max-width: 700px) {
+  .projects-page {
+    padding: 60px 20px;
+  }
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
@@ -94,4 +122,11 @@
   .page-header h1 {
     font-size: 36px;
   }
+
+  .proj-num {
+    left: 16px;
+    bottom: 12px;
+    font-size: 40px;
+  }
 }
+

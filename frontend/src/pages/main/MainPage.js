@@ -32,14 +32,39 @@ function MainPage() {
   // ====================================================
 
   const imagePaths = [
-    
-    
     'KakaoTalk_2026_bs.jpg',
     'spr_home/captured-image-1749302385996.jpg',
     '20260927_215436(0).jpg',
   ];
 
   const mainImages = useSignedUrls(imagePaths);
+
+
+  // ====================================================
+  // 프로젝트 카드 이미지
+  // Supabase Storage
+  // ====================================================
+
+  const projectImagePaths = projects
+    .map((project) => project.storage?.paths?.[0])
+    .filter(Boolean);
+
+  const projectImages = useSignedUrls(projectImagePaths);
+
+
+  // ====================================================
+  // 프로젝트 이미지 URL Map
+  // ====================================================
+
+  const projectImageMap = projectImages.reduce((map, item) => {
+
+    if (item?.path && item?.signedUrl) {
+      map[item.path] = item.signedUrl;
+    }
+
+    return map;
+
+  }, {});
 
 
   // ====================================================
@@ -61,7 +86,7 @@ function MainPage() {
 
 
   // ====================================================
-  // 실제 사용할 수 있는 이미지
+  // 실제 사용할 수 있는 메인 이미지
   // ====================================================
 
   const slides = mainImages.filter(
@@ -522,6 +547,7 @@ function MainPage() {
           <div className="section-header">
 
             <div>
+
               <p className="section-label">
                 PROJECTS
               </p>
@@ -534,6 +560,7 @@ function MainPage() {
                 지역의 이야기와 아이디어로
                 새로운 경험들을 만들어갑니다.
               </p>
+
             </div>
 
           </div>
@@ -541,53 +568,90 @@ function MainPage() {
 
           <div className="preview-cards">
 
-            {projects.map((project) => (
+            {projects.map((project) => {
 
-              <article
-                key={project.id}
-                className="preview-card card"
-              >
+              // --------------------------------------------
+              // 프로젝트 이미지
+              //
+              // Supabase Storage 프로젝트:
+              // storage.paths[0]
+              //
+              // 기존 로컬 이미지 프로젝트:
+              // project.image
+              // --------------------------------------------
 
-                {/* 프로젝트 이미지 */}
+              const storagePath =
+                project.storage?.paths?.[0];
 
-                <div className="preview-img">
+              const supabaseImage =
+                storagePath
+                  ? projectImageMap[storagePath]
+                  : null;
 
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                  />
-
-                </div>
+              const projectImage =
+                supabaseImage ||
+                project.image;
 
 
-                {/* 프로젝트 정보 */}
+              return (
 
-                <div className="card-body">
+                <article
+                  key={project.id}
+                  className="preview-card card"
+                >
 
-                  <span className="badge badge-success">
-                    PROJECT {project.number}
-                  </span>
+                  {/* 프로젝트 이미지 */}
 
-                  <h3 className="card-title">
-                    {project.title}
-                  </h3>
+                  <div className="preview-img">
 
-                  <p className="card-text">
-                    {project.description}
-                  </p>
+                    {projectImage ? (
 
-                  <Link
-                    to={`/projects/${project.id}`}
-                    className="btn btn-sm btn-primary project-detail-button"
-                  >
-                    자세히 보기
-                  </Link>
+                      <img
+                        src={projectImage}
+                        alt={project.title}
+                      />
 
-                </div>
+                    ) : (
 
-              </article>
+                      <div className="preview-img-loading">
+                        이미지를 불러오는 중입니다.
+                      </div>
 
-            ))}
+                    )}
+
+                  </div>
+
+
+                  {/* 프로젝트 정보 */}
+
+                  <div className="card-body">
+
+                    <span className="badge badge-success">
+                      PROJECT {project.number}
+                    </span>
+
+                    <h3 className="card-title">
+                      {project.title}
+                    </h3>
+
+                    <p className="card-text">
+                      {project.description}
+                    </p>
+
+                    <Link
+                      to={`/projects/${project.id}`}
+                      className="btn btn-sm btn-primary project-detail-button"
+                    >
+                      자세히 보기
+                    </Link>
+
+                  </div>
+
+                </article>
+
+              );
+
+            })}
 
           </div>
 
