@@ -28,9 +28,9 @@ const projects = [
     title: '인터넷 소원연등 프로젝트',
     description: '인터넷 소원연등 프로젝트',
     storage: {
+      type :'lantern',
       bucket: 'spr_sg',
-      path: BulmosanGoods.storage?.paths?.[0] || null,
-      link: '/pages/lantern/LanternPage.js',
+      link: '/lantern',
     },
   },
 ];
