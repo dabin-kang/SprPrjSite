@@ -30,6 +30,7 @@ const projects = [
     storage: {
       bucket: 'spr_sg',
       path: BulmosanGoods.storage?.paths?.[0] || null,
+      link: '/pages/lantern/LanternPage.js',
     },
   },
 ];

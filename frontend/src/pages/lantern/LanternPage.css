@@ -1,0 +1,1581 @@
+/* =========================================
+   INTERNET LANTERN
+========================================= */
+
+.lantern-page {
+  width: 100%;
+  overflow: hidden;
+  background: #090b16;
+  color: #fff;
+}
+
+
+/* =========================================
+   MAIN STAGE
+========================================= */
+
+.lantern-stage {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 70px);
+  min-height: 760px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(77, 76, 126, 0.28),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(80, 105, 160, 0.16),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #080a16 0%,
+      #11172b 52%,
+      #090c18 100%
+    );
+}
+
+
+/* =========================================
+   STARS
+========================================= */
+
+.lantern-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.lantern-stars i {
+  position: absolute;
+
+  left: var(--star-left);
+  top: var(--star-top);
+
+  width: var(--star-size);
+  height: var(--star-size);
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  opacity: 0.45;
+
+  animation:
+    lantern-star-twinkle
+    3.6s
+    ease-in-out
+    infinite;
+
+  animation-delay: var(--star-delay);
+}
+
+@keyframes lantern-star-twinkle {
+
+  0%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.18;
+  }
+
+  50% {
+    transform: scale(1.8);
+    opacity: 0.95;
+  }
+}
+
+
+/* =========================================
+   MOON
+========================================= */
+
+.lantern-moon {
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: 8%;
+  top: 9%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #fffdf0 0%,
+      #eee9cf 55%,
+      #bcb899 100%
+    );
+
+  box-shadow:
+    0 0 60px rgba(255, 249, 210, 0.16),
+    0 0 120px rgba(255, 249, 210, 0.08);
+
+  opacity: 0.82;
+
+  transform:
+    translate(
+      calc((var(--mouse-x) - 0.5) * -10px),
+      calc((var(--mouse-y) - 0.5) * -6px)
+    );
+
+  transition: transform 0.4s ease;
+}
+
+.lantern-moon::after {
+  content: "";
+
+  position: absolute;
+
+  width: 185px;
+  height: 185px;
+
+  top: -8px;
+  left: 30px;
+
+  border-radius: 50%;
+
+  background: #080a16;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.lantern-intro {
+  position: absolute;
+
+  left: 50%;
+  top: 13%;
+
+  width: 100%;
+
+  text-align: center;
+
+  z-index: 5;
+
+  pointer-events: none;
+
+  transform:
+    translateX(-50%)
+    translate(
+      calc((var(--mouse-x) - 0.5) * -8px),
+      calc((var(--mouse-y) - 0.5) * -5px)
+    );
+
+  transition: transform 0.35s ease;
+}
+
+.lantern-eyebrow {
+  margin: 0 0 13px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  letter-spacing: 0.24em;
+
+  opacity: 0.58;
+}
+
+.lantern-intro h1 {
+  margin: 0;
+
+  font-size: clamp(
+    42px,
+    5vw,
+    72px
+  );
+
+  font-weight: 500;
+
+  letter-spacing: -0.06em;
+}
+
+.lantern-intro > p:last-child {
+  margin: 22px 0 0;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+
+  color: rgba(
+    255,
+    255,
+    255,
+    0.66
+  );
+}
+
+
+/* =========================================
+   LANTERN FIELD
+========================================= */
+
+.lantern-field {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 4;
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   LANTERN
+========================================= */
+
+.floating-lantern {
+  position: absolute;
+
+  width: 120px;
+  height: 150px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  transform:
+    translate(-50%, -50%);
+
+  z-index: 3;
+}
+
+.floating-lantern::before {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 110px;
+  height: 110px;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 241, 178, 0.15),
+      transparent 70%
+    );
+
+  opacity: 0.6;
+
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease;
+}
+
+.floating-lantern:hover::before {
+  transform:
+    translate(-50%, -50%)
+    scale(1.5);
+
+  opacity: 1;
+}
+
+
+/* =========================================
+   SVG
+========================================= */
+
+.floating-lantern > .lantern-svg {
+  width: 120px;
+  height: 150px;
+
+  transform:
+    translate(
+      var(--parallax-x),
+      var(--parallax-y)
+    )
+    scale(var(--size));
+
+  transform-origin: center;
+
+  animation:
+    lantern-float
+    var(--duration)
+    ease-in-out
+    var(--delay)
+    infinite;
+
+  transition: filter 0.35s ease;
+}
+
+.floating-lantern:hover > .lantern-svg {
+  filter:
+    brightness(1.16)
+    drop-shadow(
+      0 0 15px
+      rgba(255, 239, 173, 0.7)
+    );
+
+  animation-duration:
+    calc(var(--duration) * 0.72);
+}
+
+.lantern-svg {
+  overflow: visible;
+}
+
+
+/* =========================================
+   LANTERN DETAILS
+========================================= */
+
+.lantern-string {
+  fill: none;
+
+  stroke:
+    rgba(
+      255,
+      255,
+      255,
+      0.5
+    );
+
+  stroke-width: 1.5;
+}
+
+.lantern-top {
+  fill:
+    rgba(
+      245,
+      224,
+      170,
+      0.8
+    );
+
+  stroke:
+    rgba(
+      255,
+      255,
+      255,
+      0.35
+    );
+
+  stroke-width: 1;
+}
+
+.lantern-rib {
+  fill: none;
+
+  stroke:
+    rgba(
+      255,
+      255,
+      255,
+      0.27
+    );
+
+  stroke-width: 1;
+}
+
+.lantern-band {
+  fill:
+    rgba(
+      112,
+      75,
+      35,
+      0.2
+    );
+
+  stroke:
+    rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
+
+  stroke-width: 0.8;
+}
+
+.lantern-bottom {
+  fill:
+    rgba(
+      240,
+      205,
+      126,
+      0.72
+    );
+}
+
+.lantern-tassel {
+  fill: none;
+
+  stroke:
+    rgba(
+      245,
+      220,
+      154,
+      0.82
+    );
+
+  stroke-width: 1.6;
+
+  stroke-linecap: round;
+}
+
+
+/* =========================================
+   LIGHT
+========================================= */
+
+.lantern-glow {
+  opacity: 0.72;
+
+  animation:
+    lantern-light
+    3s
+    ease-in-out
+    infinite;
+}
+
+.lantern-flame {
+  opacity: 0.78;
+
+  animation:
+    flame-pulse
+    2.3s
+    ease-in-out
+    infinite;
+
+  transform-origin:
+    60px 79px;
+}
+
+.lantern-flame-core {
+  opacity: 0.95;
+
+  animation:
+    flame-pulse
+    1.7s
+    ease-in-out
+    infinite;
+
+  transform-origin:
+    60px 79px;
+}
+
+@keyframes lantern-light {
+
+  0%,
+  100% {
+    opacity: 0.52;
+  }
+
+  50% {
+    opacity: 0.92;
+  }
+}
+
+@keyframes flame-pulse {
+
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.65;
+  }
+
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+
+/* =========================================
+   FLOAT
+========================================= */
+
+@keyframes lantern-float {
+
+  0% {
+    margin-left: 0;
+    margin-top: 0;
+    rotate: -2deg;
+  }
+
+  25% {
+    margin-left: 7px;
+    margin-top: -9px;
+    rotate: 2deg;
+  }
+
+  50% {
+    margin-left: -4px;
+    margin-top: 4px;
+    rotate: -1deg;
+  }
+
+  75% {
+    margin-left: -8px;
+    margin-top: -6px;
+    rotate: 2deg;
+  }
+
+  100% {
+    margin-left: 0;
+    margin-top: 0;
+    rotate: -2deg;
+  }
+}
+
+
+/* =========================================
+   HOVER LABEL
+========================================= */
+
+.lantern-hover-label {
+  position: absolute;
+
+  left: 50%;
+  bottom: -2px;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(
+      8,
+      10,
+      22,
+      0.78
+    );
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.82
+    );
+
+  font-size: 10px;
+
+  white-space: nowrap;
+
+  opacity: 0;
+
+  transform:
+    translate(
+      -50%,
+      8px
+    );
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+
+  pointer-events: none;
+}
+
+.floating-lantern:hover
+.lantern-hover-label {
+  opacity: 1;
+
+  transform:
+    translate(
+      -50%,
+      0
+    );
+}
+
+
+/* =========================================
+   NEW LANTERN
+========================================= */
+
+.new-lantern {
+  animation:
+    lantern-arrive
+    1.7s
+    cubic-bezier(
+      0.2,
+      0.8,
+      0.2,
+      1
+    )
+    both;
+}
+
+@keyframes lantern-arrive {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      translate(
+        -50%,
+        100vh
+      )
+      scale(0.35);
+  }
+
+  55% {
+    opacity: 1;
+
+    transform:
+      translate(
+        -50%,
+        -20px
+      )
+      scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translate(
+        -50%,
+        -50%
+      )
+      scale(1);
+  }
+}
+
+
+/* =========================================
+   BOTTOM
+========================================= */
+
+.lantern-copy {
+  position: absolute;
+
+  left: 50%;
+  bottom: 112px;
+
+  transform:
+    translateX(-50%);
+
+  z-index: 10;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.45
+    );
+
+  font-size: 11px;
+
+  white-space: nowrap;
+}
+
+.lantern-create-button {
+  position: absolute;
+
+  left: 50%;
+  bottom: 45px;
+
+  transform:
+    translateX(-50%);
+
+  z-index: 20;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding:
+    15px 24px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.22
+    );
+
+  border-radius: 40px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  backdrop-filter:
+    blur(16px);
+
+  color: #fff;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.lantern-create-button:hover {
+  transform:
+    translateX(-50%)
+    translateY(-4px);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.14
+    );
+
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.4
+    );
+}
+
+.lantern-create-button .plus {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.14
+    );
+
+  font-size: 18px;
+
+  line-height: 1;
+}
+
+
+/* =========================================
+   SCROLL
+========================================= */
+
+.lantern-scroll-hint {
+  position: absolute;
+
+  right: 32px;
+  bottom: 45px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.3
+    );
+
+  font-size: 8px;
+
+  letter-spacing: 0.16em;
+}
+
+.lantern-scroll-hint i {
+  width: 1px;
+  height: 35px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(
+        255,
+        255,
+        255,
+        0.5
+      ),
+      transparent
+    );
+}
+
+
+/* =========================================
+   GUIDE
+========================================= */
+
+.lantern-guide {
+  min-height: 500px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background: #f7f5ef;
+
+  color: #171717;
+}
+
+.lantern-guide-inner {
+  padding:
+    100px 24px;
+}
+
+.lantern-guide .lantern-eyebrow {
+  color: #777;
+}
+
+.lantern-guide h2 {
+  margin: 0;
+
+  font-size:
+    clamp(
+      30px,
+      4vw,
+      48px
+    );
+
+  font-weight: 500;
+
+  letter-spacing: -0.05em;
+}
+
+.lantern-guide p:not(.lantern-eyebrow) {
+  margin:
+    25px 0 35px;
+
+  color: #777;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+}
+
+.lantern-guide button {
+  padding:
+    14px 28px;
+
+  border: 0;
+
+  border-radius: 30px;
+
+  background: #171717;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease;
+}
+
+.lantern-guide button:hover {
+  transform:
+    translateY(-3px);
+}
+
+
+/* =========================================
+   CREATE MODAL
+========================================= */
+
+.lantern-modal-backdrop,
+.wish-modal-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background:
+    rgba(
+      5,
+      7,
+      15,
+      0.76
+    );
+
+  backdrop-filter:
+    blur(12px);
+}
+
+.lantern-modal {
+  position: relative;
+
+  width:
+    min(
+      780px,
+      100%
+    );
+
+  display: grid;
+
+  grid-template-columns:
+    0.9fr 1.1fr;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+
+  border-radius: 22px;
+
+  background: #121627;
+
+  box-shadow:
+    0 30px 100px
+    rgba(
+      0,
+      0,
+      0,
+      0.45
+    );
+
+  animation:
+    lantern-modal-in
+    0.35s
+    ease
+    both;
+}
+
+@keyframes lantern-modal-in {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+.lantern-modal-close {
+  position: absolute;
+
+  right: 18px;
+  top: 16px;
+
+  z-index: 10;
+
+  width: 34px;
+  height: 34px;
+
+  border: 0;
+
+  background: transparent;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+
+  font-size: 25px;
+
+  cursor: pointer;
+}
+
+.lantern-modal-preview {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 530px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(
+        239,
+        201,
+        95,
+        0.25
+      ),
+      rgba(
+        15,
+        18,
+        34,
+        0.05
+      ) 50%
+    ),
+    #0c1020;
+}
+
+.lantern-modal-preview .lantern-svg {
+  width: 230px;
+  height: 290px;
+
+  filter:
+    drop-shadow(
+      0 0 25px
+      rgba(
+        255,
+        220,
+        130,
+        0.45
+      )
+    );
+}
+
+.lantern-modal-content {
+  padding:
+    65px 48px 48px;
+}
+
+.lantern-modal-content h2 {
+  margin: 0;
+
+  font-size: 30px;
+
+  font-weight: 500;
+
+  letter-spacing: -0.05em;
+}
+
+.modal-description {
+  margin:
+    10px 0 35px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.5
+    );
+
+  font-size: 13px;
+}
+
+.lantern-modal-content label {
+  position: relative;
+
+  display: block;
+
+  margin-bottom: 24px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.65
+    );
+
+  font-size: 12px;
+}
+
+.lantern-modal-content input,
+.lantern-modal-content textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  margin-top: 9px;
+
+  padding:
+    13px 14px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+
+  border-radius: 8px;
+
+  outline: none;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.lantern-modal-content input:focus,
+.lantern-modal-content textarea:focus {
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.4
+    );
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+}
+
+.lantern-modal-content textarea {
+  resize: none;
+
+  line-height: 1.6;
+}
+
+.character-count {
+  position: absolute;
+
+  right: 5px;
+  bottom: -18px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.3
+    );
+
+  font-size: 9px;
+}
+
+.lantern-modal-content fieldset {
+  padding: 0;
+
+  margin:
+    0 0 28px;
+
+  border: 0;
+}
+
+.lantern-modal-content legend {
+  margin-bottom: 12px;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.65
+    );
+
+  font-size: 12px;
+}
+
+.color-picker {
+  display: flex;
+
+  gap: 10px;
+}
+
+.color-option {
+  width: 32px;
+  height: 32px;
+
+  padding: 0;
+
+  border:
+    2px solid transparent;
+
+  border-radius: 50%;
+
+  background:
+    var(--lantern-color);
+
+  box-shadow:
+    0 0 15px
+    var(--lantern-color);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.color-option:hover {
+  transform:
+    scale(1.12);
+}
+
+.color-option.selected {
+  border-color: #fff;
+
+  transform:
+    scale(1.14);
+}
+
+.lantern-submit {
+  width: 100%;
+
+  padding: 15px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  background: #f3d889;
+
+  color: #202020;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.lantern-submit:hover {
+  transform:
+    translateY(-2px);
+
+  filter:
+    brightness(1.06);
+}
+
+
+/* =========================================
+   WISH MODAL
+========================================= */
+
+.wish-modal {
+  position: relative;
+
+  width:
+    min(
+      420px,
+      100%
+    );
+
+  padding:
+    45px 40px 40px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+
+  border-radius: 22px;
+
+  background: #121627;
+
+  box-shadow:
+    0 30px 100px
+    rgba(
+      0,
+      0,
+      0,
+      0.5
+    );
+
+  animation:
+    lantern-modal-in
+    0.35s
+    ease
+    both;
+}
+
+.wish-lantern {
+  width: 180px;
+  height: 220px;
+
+  margin:
+    0 auto 15px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.wish-lantern .lantern-svg {
+  width: 160px;
+  height: 200px;
+
+  filter:
+    drop-shadow(
+      0 0 20px
+      rgba(
+        255,
+        228,
+        146,
+        0.45
+      )
+    );
+}
+
+.wish-message {
+  margin:
+    20px 0 28px;
+
+  font-size: 20px;
+
+  line-height: 1.7;
+
+  font-weight: 400;
+
+  letter-spacing: -0.04em;
+}
+
+.wish-share {
+  padding:
+    12px 20px;
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.16
+    );
+
+  border-radius: 30px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
+
+  color: #fff;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease;
+}
+
+.wish-share:hover {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .lantern-stage {
+    height:
+      calc(
+        100vh - 60px
+      );
+
+    min-height: 760px;
+  }
+
+  .lantern-moon {
+    width: 120px;
+    height: 120px;
+
+    right: -20px;
+    top: 7%;
+  }
+
+  .lantern-moon::after {
+    width: 125px;
+    height: 125px;
+
+    left: 20px;
+    top: -5px;
+  }
+
+  .lantern-intro {
+    top: 12%;
+  }
+
+  .lantern-intro h1 {
+    font-size: 42px;
+  }
+
+  .lantern-intro > p:last-child {
+    font-size: 13px;
+  }
+
+  .floating-lantern {
+    width: 92px;
+    height: 118px;
+  }
+
+  .floating-lantern > .lantern-svg {
+    width: 92px;
+    height: 118px;
+  }
+
+  .lantern-copy {
+    bottom: 105px;
+
+    font-size: 10px;
+  }
+
+  .lantern-create-button {
+    bottom: 42px;
+
+    padding:
+      13px 21px;
+  }
+
+  .lantern-scroll-hint {
+    display: none;
+  }
+
+  .lantern-modal {
+    grid-template-columns: 1fr;
+
+    max-height:
+      calc(
+        100vh - 30px
+      );
+
+    overflow-y: auto;
+  }
+
+  .lantern-modal-preview {
+    min-height: 250px;
+  }
+
+  .lantern-modal-preview .lantern-svg {
+    width: 145px;
+    height: 190px;
+  }
+
+  .lantern-modal-content {
+    padding:
+      35px 25px 30px;
+  }
+
+  .lantern-modal-content h2 {
+    font-size: 25px;
+  }
+
+  .wish-modal {
+    padding:
+      35px 25px 30px;
+  }
+
+  .wish-message {
+    font-size: 18px;
+  }
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .floating-lantern > .lantern-svg,
+  .lantern-stars i,
+  .lantern-glow,
+  .lantern-flame,
+  .lantern-flame-core {
+    animation: none !important;
+  }
+}
