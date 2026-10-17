@@ -1704,3 +1704,14 @@
     font-size: 14px;
   }
 }
+
+
+.lantern-message{
+  padding: 80px 24px;
+  background: #f8f6f0;
+  color: #242538;
+
+  display: flex;
+  justify-content: center;
+  
+}

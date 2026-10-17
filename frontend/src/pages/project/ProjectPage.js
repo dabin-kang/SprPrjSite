@@ -29,7 +29,7 @@ const projects = [
     description: '인터넷 소원연등 프로젝트',
     storage: {
       bucket: 'spr_sg',
-      path: '20231021_132925.jpg',
+      path: '56PPlbSdz0Xk59Mfsl_EVBYcBWxDHmjokGB7k676N07ISlHbCSgOnkth7u12Ww8yZWg2qwUteIxt3qDutv5s-RgGpCacRDPMzb2Ud3fWmYyPohpUJqHjxShq3ny3I4QDvm7kqRUThxtlbJq28zEA10GhNbq1vqtu_nFKSnrft8fUNdvJIOcMSq5ZjNuLCDVW.jpg',
     },
     link:'/lantern',
   },
