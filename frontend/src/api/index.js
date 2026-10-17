@@ -70,6 +70,25 @@ export const inquiryApi = {
   deleteInquiry: (id) => api.delete(`/inquiries/${id}`),
 };
 
+// Lantern API
+export const lanternApi = {
+  // 전체 연등 조회
+  getLanterns: () =>
+    api.get('/lanterns'),
+
+  // 연등 하나 조회
+  getLantern: (id) =>
+    api.get(`/lanterns/${id}`),
+
+  // 연등 만들기
+  createLantern: (data) =>
+    api.post('/lanterns', data),
+
+  // 연등 삭제
+  deleteLantern: (id) =>
+    api.delete(`/lanterns/${id}`),
+};
+
 // Magazine API
 export const magazineApi = {
   getMagazines: (page = 1, size = 9, category = '') =>
