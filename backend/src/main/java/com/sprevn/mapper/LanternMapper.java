@@ -21,7 +21,7 @@ public interface LanternMapper {
             wish,
             color,
             created_at
-        FROM spr_lantern
+        FROM lanterns
         ORDER BY created_at DESC
     """)
     List<Lantern> findAll();
@@ -37,7 +37,7 @@ public interface LanternMapper {
             wish,
             color,
             created_at
-        FROM spr_lantern
+        FROM lanterns
         WHERE lantern_id = #{lanternId}
     """)
     Optional<Lantern> findById(Long lanternId);
@@ -47,7 +47,7 @@ public interface LanternMapper {
      * 연등 생성
      */
     @Insert("""
-        INSERT INTO spr_lantern (
+        INSERT INTO lanterns (
             nickname,
             wish,
             color,
@@ -73,7 +73,7 @@ public interface LanternMapper {
      * 관리자 기능을 만들 때 사용할 수 있다.
      */
     @Delete("""
-        DELETE FROM spr_lantern
+        DELETE FROM lanterns
         WHERE lantern_id = #{lanternId}
     """)
     int delete(Long lanternId);
