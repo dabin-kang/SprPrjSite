@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Lantern {
-    private Long LanternId;
+    private Long lanternId;
     private String nickname;
     private String wish;
     private String color;
