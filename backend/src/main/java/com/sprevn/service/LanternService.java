@@ -1,4 +1,3 @@
-```java
 package com.sprevn.service;
 
 import com.sprevn.entity.Lantern;
@@ -103,4 +102,3 @@ public class LanternService {
         lanternMapper.delete(lanternId);
     }
 }
-```

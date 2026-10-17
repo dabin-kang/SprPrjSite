@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './LanternPage.css';
+import {lanternApi} from '../../api';
 
 const COLORS = [
   {
@@ -300,7 +301,16 @@ function LanternPage() {
   const stageRef = useRef(null);
 
   const [lanterns, setLanterns] =
-    useState(INITIAL_LANTERNS);
+  useState([]);
+
+const [loading, setLoading] =
+  useState(true);
+
+const [saving, setSaving] =
+  useState(false);
+
+const [error, setError] =
+  useState('');
 
   const [selectedLantern, setSelectedLantern] =
     useState(null);
@@ -381,6 +391,82 @@ function LanternPage() {
     };
   }, []);
 
+  useEffect(() => {
+  const loadLanterns = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const response =
+        await lanternApi.getLanterns();
+
+      const data =
+        response?.data ?? [];
+
+      const convertedLanterns =
+        data.map((lantern, index) => ({
+          id: lantern.lanternId,
+
+          nickname:
+            lantern.nickname || '익명',
+
+          message:
+            lantern.wish,
+
+          color:
+            lantern.color || 'gold',
+
+          /*
+           * DB에는 위치/크기/애니메이션 값을
+           * 저장하지 않는다.
+           *
+           * 화면에 표시할 때 랜덤하게 결정한다.
+           */
+          x:
+            8 +
+            ((index * 17) % 84),
+
+          y:
+            34 +
+            ((index * 23) % 48),
+
+          size:
+            0.68 +
+            ((index * 7) % 25) / 100,
+
+          duration:
+            6 +
+            ((index * 13) % 20) / 10,
+
+          delay:
+            -((index * 31) % 60) / 10,
+        }));
+
+      setLanterns(
+        convertedLanterns
+      );
+
+    } catch (err) {
+
+      console.error(
+        '연등 조회 실패:',
+        err
+      );
+
+      setError(
+        '연등을 불러오지 못했습니다.'
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
+
+  loadLanterns();
+}, []);
+
   /* 연등 만들기 */
 
   const handleOpenCreate = () => {
@@ -390,56 +476,134 @@ function LanternPage() {
     setCreateOpen(true);
   };
 
-  const handleCreateLantern = (event) => {
-    event.preventDefault();
+  const handleCreateLantern = async (event) => {
+  event.preventDefault();
 
-    const cleanMessage =
-      message.trim();
+  const cleanNickname =
+    nickname.trim() || '익명';
 
-    if (!cleanMessage) {
-      return;
+  const cleanMessage =
+    message.trim();
+
+  if (!cleanMessage) {
+    return;
+  }
+
+  try {
+
+    setSaving(true);
+
+    setError('');
+
+    /*
+     * MySQL에 저장
+     */
+    const response =
+      await lanternApi.createLantern({
+        nickname: cleanNickname,
+        wish: cleanMessage,
+        color: selectedColor,
+      });
+
+    /*
+     * ApiResponse.data
+     */
+    const saved =
+      response?.data;
+
+    if (!saved) {
+      throw new Error(
+        '저장된 연등 데이터를 받지 못했습니다.'
+      );
     }
 
+    /*
+     * DB에서 생성된 연등을
+     * 화면용 데이터로 변환
+     */
     const newLantern = {
-      id: Date.now(),
+
+      id:
+        saved.lanternId,
 
       nickname:
-        nickname.trim() || '익명',
+        saved.nickname,
 
       message:
-        cleanMessage,
+        saved.wish,
 
       color:
-        selectedColor,
+        saved.color,
 
       x:
-        8 + Math.random() * 84,
+        8 +
+        Math.random() * 84,
 
       y:
-        35 + Math.random() * 48,
+        35 +
+        Math.random() * 48,
 
       size:
-        0.68 + Math.random() * 0.25,
+        0.68 +
+        Math.random() * 0.25,
 
       duration:
-        6 + Math.random() * 2,
+        6 +
+        Math.random() * 2,
 
-      delay: 0,
+      delay:
+        0,
 
-      isNew: true,
+      isNew:
+        true,
     };
 
+    /*
+     * 화면에 즉시 추가
+     */
     setLanterns((current) => [
       ...current,
       newLantern,
     ]);
 
+    /*
+     * 모달 닫기
+     */
     setCreateOpen(false);
 
+    /*
+     * 방금 만든 연등의 소원 보여주기
+     */
     setSelectedLantern(
       newLantern
     );
-  };
+
+    /*
+     * 입력값 초기화
+     */
+    setNickname('');
+    setMessage('');
+    setSelectedColor('gold');
+
+  } catch (err) {
+
+    console.error(
+      '연등 저장 실패:',
+      err
+    );
+
+    setError(
+      typeof err === 'string'
+        ? err
+        : '연등을 저장하지 못했습니다.'
+    );
+
+  } finally {
+
+    setSaving(false);
+
+  }
+};
 
   /* 공유 */
 
@@ -831,11 +995,14 @@ function LanternPage() {
                 </fieldset>
 
                 <button
-                  className="lantern-submit"
-                  type="submit"
-                >
-                  연등 달기
-                </button>
+  className="lantern-submit"
+  type="submit"
+  disabled={saving}
+>
+  {saving
+    ? '연등을 밝히는 중...'
+    : '연등 달기'}
+</button>
 
               </form>
 
@@ -879,7 +1046,7 @@ function LanternPage() {
                 }
                 aria-label="닫기"
               >
-                ×
+            
               </button>
 
               <div className="wish-lantern">

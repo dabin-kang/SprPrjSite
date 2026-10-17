@@ -1,4 +1,3 @@
-```java
 package com.sprevn.controller;
 
 import com.sprevn.dto.ApiResponse;
@@ -96,4 +95,3 @@ public class LanternController {
         );
     }
 }
-```

@@ -1,4 +1,3 @@
-```java
 package com.sprevn.mapper;
 
 import com.sprevn.entity.Lantern;
@@ -79,4 +78,3 @@ public interface LanternMapper {
     """)
     int delete(Long lanternId);
 }
-```
