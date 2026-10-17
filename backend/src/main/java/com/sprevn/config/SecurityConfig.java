@@ -55,7 +55,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/magazines/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/inquiries").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/lanterns").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/lanterns").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/lanterns").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // 관리자(지점장 등) 권한 설정
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // 그 외 모든 요청 인증 필요
