@@ -1579,3 +1579,128 @@
     animation: none !important;
   }
 }
+
+
+
+/* 소원 텍스트 목록 */
+.lantern-wishes {
+  padding: 80px 24px;
+  background: #f8f6f0;
+  color: #242538;
+}
+
+.lantern-wishes-inner {
+  width: min(760px, 100%);
+  margin: 0 auto;
+}
+
+.lantern-wishes .lantern-eyebrow {
+  color: #77768a;
+  text-align: center;
+}
+
+.lantern-wishes-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.lantern-wishes-heading h2 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+
+.lantern-wishes-heading span {
+  flex-shrink: 0;
+  color: #77768a;
+  font-size: 13px;
+}
+
+.lantern-wishes-description {
+  margin: 12px 0 30px;
+  color: #77768a;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.lantern-wishes-state {
+  padding: 32px 16px;
+  border-top: 1px solid #e5e1d8;
+  border-bottom: 1px solid #e5e1d8;
+  color: #77768a;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.lantern-wish-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #dedbd2;
+}
+
+.lantern-wish-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 2px;
+  border-bottom: 1px solid #dedbd2;
+}
+
+.lantern-wish-mark {
+  flex-shrink: 0;
+  color: #b58d45;
+  font-size: 16px;
+}
+
+.lantern-wish-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.lantern-wish-text p {
+  margin: 0;
+  color: #292a3b;
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.lantern-wish-meta {
+  margin-top: 8px;
+  color: #898797;
+  font-size: 12px;
+}
+
+.lantern-wish-view {
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border: 1px solid #dedbd2;
+  border-radius: 999px;
+  background: transparent;
+  color: #555469;
+  cursor: pointer;
+}
+
+.lantern-wish-view:hover {
+  background: #efeadf;
+}
+
+@media (max-width: 600px) {
+  .lantern-wishes {
+    padding: 60px 20px;
+  }
+
+  .lantern-wish-item {
+    gap: 10px;
+    padding: 19px 0;
+  }
+
+  .lantern-wish-text p {
+    font-size: 14px;
+  }
+}

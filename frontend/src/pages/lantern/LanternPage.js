@@ -846,6 +846,76 @@ const [error, setError] =
 
       </section>
 
+      
+{/* 소원 목록 */}
+<section
+  className="lantern-wishes"
+  aria-labelledby="lantern-wishes-title"
+>
+  <div className="lantern-wishes-inner">
+    <p className="lantern-eyebrow">
+      WISHES FROM EVERYONE
+    </p>
+
+    <div className="lantern-wishes-heading">
+      <h2 id="lantern-wishes-title">
+        함께 모인 소원
+      </h2>
+      <span>{lanterns.length}개의 소원</span>
+    </div>
+
+    <p className="lantern-wishes-description">
+      누군가의 바람이 모여 이 밤을 밝힙니다.
+    </p>
+
+    {loading ? (
+      <p className="lantern-wishes-state">
+        소원을 불러오는 중입니다...
+      </p>
+    ) : lanterns.length === 0 ? (
+      <p className="lantern-wishes-state">
+        아직 등록된 소원이 없어요.
+        첫 번째 소원을 남겨주세요.
+      </p>
+    ) : (
+      <ul className="lantern-wish-list">
+        {lanterns.map((lantern) => (
+          <li
+            className="lantern-wish-item"
+            key={lantern.id}
+          >
+            <span
+              className="lantern-wish-mark"
+              aria-hidden="true"
+            >
+              ✦
+            </span>
+
+            <div className="lantern-wish-text">
+              <p>{lantern.message}</p>
+
+              <div className="lantern-wish-meta">
+                <span>
+                  {lantern.nickname || '익명'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="lantern-wish-view"
+              onClick={() => setSelectedLantern(lantern)}
+            >
+              보기
+            </button>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+
       {/* -------------------------------------------
           연등 만들기 모달
       ------------------------------------------- */}
