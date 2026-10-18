@@ -343,6 +343,24 @@ function MainPage() {
   // 화면
   // ====================================================
 
+const youtubeVideos = [
+  {
+    id: 'YUH_5Hgew44',
+    title: '영상 01',
+    type: 'youtube',
+  },
+  {
+    id: '5zVFVevvXbQ',
+    title: '영상 02',
+    type: 'youtube',
+  },
+  {
+    id: 'fDubY-AAg0o',
+    title: '영상 03',
+    type: 'youtube',
+  },
+];
+
   return (
     <div className="main-page">
 
@@ -660,9 +678,60 @@ function MainPage() {
       </section>
 
 
-<div className="youtube-section">
-  <h1>유튜브</h1>
-</div>
+<section className="youtube-section">
+  <div className="youtube-container">
+
+    <div className="youtube-header">
+      <p className="youtube-label">
+        YOUTUBE
+      </p>
+
+      <h2>
+        영상으로 만나는 말랑뮤즈
+      </h2>
+
+      <p>
+        말랑뮤즈의 작업과 이야기를 영상으로 만나보세요.
+      </p>
+    </div>
+
+    <div className="youtube-grid">
+
+      {youtubeVideos.map((video) => (
+
+        <article
+          key={video.id}
+          className={`youtube-card ${
+            video.type === 'shorts'
+              ? 'youtube-card-shorts'
+              : ''
+          }`}
+        >
+
+          <div className="youtube-video">
+
+            <iframe
+              src={`https://www.youtube.com/embed/${video.id}`}
+              title={video.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+
+          </div>
+
+          <div className="youtube-info">
+            <h3>{video.title}</h3>
+          </div>
+
+        </article>
+
+      ))}
+
+    </div>
+
+  </div>
+</section>
 
       
 
