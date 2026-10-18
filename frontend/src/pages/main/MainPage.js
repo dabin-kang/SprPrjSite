@@ -732,11 +732,18 @@ const youtubeVideos = [
 
   </div>
 </section>
-
-      
-
-      
-
+<button
+  type="button"
+  onClick={() => {
+    window.open(
+      'https://www.youtube.com/@Bangmoon_bookstore',
+      '_blank',
+      'noopener,noreferrer'
+    );
+  }}
+>
+  바로가기
+</button>
     </div>
   );
 }
