@@ -33,16 +33,7 @@ const projects = [
     },
     link:'/lantern',
   },
-  {
-    id: 'parting-project',
-    number: '04',
-    title: '이별 극복',
-    description: '인터넷 소원연등 프로젝트',
-    storage: {
-      bucket: 'spr_sg',
-      path: '20240524_201604.jpg',
-    },
-  },
+  
 ];
 
 function ProjectPage() {

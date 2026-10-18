@@ -407,7 +407,7 @@ function MainPage() {
                   </h1>
 
                   <p>
-                    창의적인 아이디어와 지역의 이야기를
+                    창의적인 아이디어와 이야기를
                     <br />
                     새로운 경험으로 만들어갑니다.
                   </p>
@@ -660,47 +660,13 @@ function MainPage() {
       </section>
 
 
-      {/* ==================================================
-          CTA
-      ================================================== */}
+<div className="youtube-section">
+  <h1>유튜브</h1>
+</div>
 
-      <section className="cta-section">
+      
 
-        <div className="container">
-
-          <div className="cta-content">
-
-            <h2>
-              함께 만들어보세요
-            </h2>
-
-            <p>
-              말랑뮤즈와 함께 특별한 경험을 만들어보세요
-            </p>
-
-            <div className="cta-buttons">
-
-              <Link
-                to="/signup"
-                className="btn btn-primary btn-lg"
-              >
-                무료 회원가입
-              </Link>
-
-              <Link
-                to="/inquiry"
-                className="btn btn-secondary btn-lg"
-              >
-                상담 문의
-              </Link>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
+      
 
     </div>
   );
