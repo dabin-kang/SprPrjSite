@@ -1,5 +1,5 @@
 
-+-------------------------------------------import axios from 'axios';
+import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
@@ -55,7 +55,13 @@ export const eventApi = {
 
 // Project API
 export const projectApi = {
-  getProjects: (page = 1, size = 9) => api.get(`/projects?page=${page}&size=${size}`),
+  getProjects: (page = 1, size = 9) =>
+    api.get(`/projects?page=${page}&size=${size}`),
+
+  // 관리자 전체 프로젝트 조회
+  getAdminProjects: (page = 1, size = 20) =>
+    api.get(`/projects/admin?page=${page}&size=${size}`),
+
   getProject: (id) => api.get(`/projects/${id}`),
   createProject: (data) => api.post('/projects', data),
   updateProject: (id, data) => api.put(`/projects/${id}`, data),

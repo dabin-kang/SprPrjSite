@@ -42,8 +42,8 @@ function AdminPage() {
         const res = await eventApi.getEvents(1, 20);
         setEvents(res.data?.events || DUMMY_EVENTS);
       } else if (tab === 'projects') {
-        const res = await projectApi.getProjects(1, 20);
-        setProjects(res.data?.projects || DUMMY_PROJECTS);
+        const res = await projectApi.getAdminProjects(1, 20);
+        setProjects(res.data?.projects ?? []);
       } else if (tab === 'inquiries') {
         const res = await inquiryApi.getInquiries(1, 20);
         setInquiries(res.data?.inquiries || DUMMY_INQUIRIES);
