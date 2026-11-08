@@ -52,6 +52,10 @@ public class SecurityConfig {
                         .requestMatchers("/health").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/events/**").permitAll()
+                        // 관리자 프로젝트 API는 관리자만 접근 가능
+                        .requestMatchers("/projects/admin", "/projects/admin/**").hasRole("ADMIN")
+                        // 공개 프로젝트 조회
+                        .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/projects/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/magazines/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/inquiries").permitAll()

@@ -17,7 +17,9 @@ public class CustomUserDetails implements UserDetails {
 
     public CustomUserDetails(User user) {
         this.user = user;
-        this.role = "admin".equals(user.getId()) ? "ROLE_ADMIN" : "ROLE_USER";
+        this.role = "admin".equalsIgnoreCase(user.getId())
+        ? "ROLE_ADMIN"
+        : "ROLE_USER";
     }
 
     @Override
