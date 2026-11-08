@@ -682,18 +682,40 @@ const youtubeVideos = [
   <div className="youtube-container">
 
     <div className="youtube-header">
-      <p className="youtube-label">
-        YOUTUBE
-      </p>
 
-      <h2>
-        영상으로 만나는 말랑뮤즈
-      </h2>
+  <div className="youtube-heading">
 
-      <p>
-        말랑뮤즈의 작업과 이야기를 영상으로 만나보세요.
-      </p>
-    </div>
+    <p className="youtube-label">
+      YOUTUBE
+    </p>
+
+    <h2>
+      영상으로 만나는 말랑뮤즈
+    </h2>
+
+    <p>
+      말랑뮤즈의 작업과 이야기를 영상으로 만나보세요.
+    </p>
+
+  </div>
+
+
+  <button
+    type="button"
+    className="youtube-channel-button"
+    onClick={() => {
+      window.open(
+        'https://www.youtube.com/@Bangmoon_bookstore',
+        '_blank',
+        'noopener,noreferrer'
+      );
+    }}
+  >
+    <span>유튜브 채널 바로가기</span>
+    <span className="youtube-channel-arrow">↗</span>
+  </button>
+
+</div>
 
     <div className="youtube-grid">
 
@@ -732,18 +754,7 @@ const youtubeVideos = [
 
   </div>
 </section>
-<button
-  type="button"
-  onClick={() => {
-    window.open(
-      'https://www.youtube.com/@Bangmoon_bookstore',
-      '_blank',
-      'noopener,noreferrer'
-    );
-  }}
->
-  바로가기
-</button>
+
     </div>
   );
 }
