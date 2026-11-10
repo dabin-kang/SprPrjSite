@@ -44,3 +44,11 @@ logging:
   level:
     com.sprevn: INFO
     org.springframework.security: WARN
+
+
+# Supabase Storage 이미지 업로드 설정
+supabase:
+  url: ${SUPABASE_URL:}
+  service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+  storage-bucket: ${SUPABASE_STORAGE_BUCKET:spr_sg}
+

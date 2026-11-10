@@ -66,6 +66,14 @@ export const projectApi = {
   createProject: (data) => api.post('/projects', data),
   updateProject: (id, data) => api.put(`/projects/${id}`, data),
   deleteProject: (id) => api.delete(`/projects/${id}`),
+
+   // Supabase 이미지 업로드는 백엔드 관리자 API를 통해 처리
+  uploadProjectImage: (file, slug) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('slug', slug);
+
+    return api.post('/projects/upload-image', formData);
 };
 
 // Inquiry API
