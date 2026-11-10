@@ -343,78 +343,419 @@ function EventsTab({ events, onDelete, onRefresh }) {
 }
 
 /* ========== 프로젝트 관리 탭 ========== */
-function ProjectsTab({ projects, onDelete, onRefresh }) {
-  const [form, setForm] = useState({ title: '', description: '', techStack: '', projectUrl: '' });
-  const [showForm, setShowForm] = useState(false);
 
-  const handleCreate = async (e) => {
+/* ========== 프로젝트 관리 탭 ========== */
+function ProjectsTab({ projects, onDelete, onRefresh }) {
+  const emptyForm = {
+    title: '',
+    description: '',
+    slug: '',
+    projectNo: '',
+    category: '',
+    techStack: '',
+    projectUrl: '',
+    sortOrder: '0',
+    status: '0',
+  };
+
+  const [form, setForm] = useState(emptyForm);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 신규 등록 화면
+  const openCreateForm = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+    setError('');
+    setShowForm(true);
+  };
+
+  // 기존 프로젝트 수정 화면
+  const openEditForm = (project) => {
+    setEditingId(project.projectId);
+
+    setForm({
+      title: project.title || '',
+      description: project.description || '',
+      slug: project.slug || '',
+      projectNo: String(project.projectNo ?? ''),
+      category: project.category || '',
+      techStack: project.techStack || '',
+      projectUrl: project.projectUrl || '',
+      sortOrder: String(project.sortOrder ?? 0),
+      status: String(project.status ?? 0),
+    });
+
+    setError('');
+    setShowForm(true);
+  };
+
+  // 등록 및 수정
+  const handleSave = async (e) => {
     e.preventDefault();
+
+    if (saving) return;
+
+    const slug = form.slug.trim();
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      setError(
+        'URL 식별자는 영문 소문자, 숫자, 하이픈만 사용할 수 있습니다.'
+      );
+      return;
+    }
+
+    if (!form.projectNo || Number(form.projectNo) < 1) {
+      setError('프로젝트 번호를 1 이상으로 입력해 주세요.');
+      return;
+    }
+
+    const payload = {
+      title: form.title.trim(),
+      description: form.description.trim(),
+      slug,
+      projectNo: Number(form.projectNo),
+      category: form.category.trim(),
+      techStack: form.techStack.trim(),
+      projectUrl: form.projectUrl.trim(),
+      sortOrder: Number(form.sortOrder || 0),
+      status: Number(form.status),
+    };
+
+    if (!payload.title) {
+      setError('프로젝트 제목을 입력해 주세요.');
+      return;
+    }
+
+    setSaving(true);
+    setError('');
+
     try {
-      await projectApi.createProject(form);
+      if (editingId) {
+        await projectApi.updateProject(editingId, payload);
+      } else {
+        await projectApi.createProject(payload);
+      }
+
+      alert(editingId
+        ? '프로젝트가 수정되었습니다.'
+        : '프로젝트가 등록되었습니다.'
+      );
+
       setShowForm(false);
-      setForm({ title: '', description: '', techStack: '', projectUrl: '' });
-      onRefresh();
-    } catch (err) { alert(typeof err === 'string' ? err : '등록 실패'); }
+      setEditingId(null);
+      setForm(emptyForm);
+
+      await onRefresh();
+    } catch (err) {
+      setError(
+        typeof err === 'string'
+          ? err
+          : err?.response?.data?.message ||
+            '저장에 실패했습니다. 입력값과 서버 상태를 확인해 주세요.'
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(emptyForm);
+    setError('');
   };
 
   return (
     <div>
-      <div style={{ marginBottom: '16px', textAlign: 'right' }}>
-        <button className="btn btn-primary btn-sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? '취소' : '+ 프로젝트 등록'}
+      {/* 상단 버튼 */}
+      <div style={{
+        marginBottom: '20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <div>
+          <h3>프로젝트 관리</h3>
+          <p style={{ color: 'var(--text-gray)', fontSize: '0.85rem' }}>
+            총 {projects.length}개의 프로젝트
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={openCreateForm}
+        >
+          + 프로젝트 등록
         </button>
       </div>
 
+      {/* 프로젝트 등록 및 수정 폼 */}
       {showForm && (
-        <div className="card" style={{ marginBottom: '20px' }}>
+        <div className="card" style={{ marginBottom: '24px' }}>
           <div className="card-body">
-            <h3 style={{ marginBottom: '20px' }}>프로젝트 등록</h3>
-            <form onSubmit={handleCreate}>
+            <h3 style={{ marginBottom: '20px' }}>
+              {editingId ? '프로젝트 수정' : '새 프로젝트 등록'}
+            </h3>
+
+            <form onSubmit={handleSave}>
               <div className="form-group">
-                <label className="form-label">제목</label>
-                <input className="form-control" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required />
+                <label className="form-label">프로젝트 제목 *</label>
+                <input
+                  className="form-control"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  placeholder="예: 창원 비엔날레"
+                  required
+                />
               </div>
+
               <div className="form-group">
-                <label className="form-label">설명</label>
-                <textarea className="form-control" rows={3} value={form.description} onChange={e => setForm({...form, description: e.target.value})} />
+                <label className="form-label">프로젝트 설명</label>
+                <textarea
+                  className="form-control"
+                  name="description"
+                  rows={3}
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="프로젝트에 대한 간단한 설명"
+                />
               </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+              }}>
+                <div className="form-group">
+                  <label className="form-label">URL 식별자 *</label>
+                  <input
+                    className="form-control"
+                    name="slug"
+                    value={form.slug}
+                    onChange={handleChange}
+                    placeholder="changwon-biennale"
+                    required
+                  />
+                  <small>영문 소문자, 숫자, 하이픈만 사용</small>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">프로젝트 번호 *</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    name="projectNo"
+                    min="1"
+                    value={form.projectNo}
+                    onChange={handleChange}
+                    placeholder="예: 3"
+                    required
+                  />
+                </div>
+              </div>
+
               <div className="form-group">
-                <label className="form-label">기술 스택 (쉼표로 구분)</label>
-                <input className="form-control" value={form.techStack} onChange={e => setForm({...form, techStack: e.target.value})} placeholder="React, Spring Boot, MySQL" />
+                <label className="form-label">카테고리</label>
+                <input
+                  className="form-control"
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  placeholder="예: 문화, 디자인, 상품개발"
+                />
               </div>
+
               <div className="form-group">
-                <label className="form-label">프로젝트 URL</label>
-                <input className="form-control" value={form.projectUrl} onChange={e => setForm({...form, projectUrl: e.target.value})} />
+                <label className="form-label">기술 스택</label>
+                <input
+                  className="form-control"
+                  name="techStack"
+                  value={form.techStack}
+                  onChange={handleChange}
+                  placeholder="React, Spring Boot, MySQL"
+                />
               </div>
-              <button type="submit" className="btn btn-primary">등록</button>
+
+              <div className="form-group">
+                <label className="form-label">외부 프로젝트 URL</label>
+                <input
+                  className="form-control"
+                  name="projectUrl"
+                  type="url"
+                  value={form.projectUrl}
+                  onChange={handleChange}
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+              }}>
+                <div className="form-group">
+                  <label className="form-label">정렬 순서</label>
+                  <input
+                    className="form-control"
+                    type="number"
+                    name="sortOrder"
+                    value={form.sortOrder}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">공개 상태</label>
+                  <select
+                    className="form-control"
+                    name="status"
+                    value={form.status}
+                    onChange={handleChange}
+                  >
+                    <option value="0">비공개</option>
+                    <option value="1">공개</option>
+                  </select>
+                </div>
+              </div>
+
+              {error && (
+                <div style={{
+                  padding: '12px',
+                  marginBottom: '16px',
+                  background: '#fff0f0',
+                  color: '#c62828',
+                  borderRadius: '6px',
+                }}>
+                  {error}
+                </div>
+              )}
+
+              <div style={{
+                display: 'flex',
+                gap: '8px',
+                justifyContent: 'flex-end',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCancel}
+                  disabled={saving}
+                >
+                  취소
+                </button>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={saving}
+                >
+                  {saving
+                    ? '저장 중...'
+                    : editingId
+                      ? '수정 저장'
+                      : '프로젝트 등록'
+                  }
+                </button>
+              </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* 프로젝트 목록 */}
       <div className="table-wrap">
         <table className="table">
           <thead>
-            <tr><th>ID</th><th>제목</th><th>기술 스택</th><th>상태</th><th>관리</th></tr>
+            <tr>
+              <th>번호</th>
+              <th>프로젝트</th>
+              <th>URL 식별자</th>
+              <th>카테고리</th>
+              <th>상태</th>
+              <th>관리</th>
+            </tr>
           </thead>
+
           <tbody>
-            {projects.map((proj) => (
-              <tr key={proj.projectId}>
-                <td>{proj.projectId}</td>
-                <td><strong>{proj.title}</strong></td>
-                <td><span style={{fontSize:'0.82rem',color:'var(--text-gray)'}}>{proj.techStack}</span></td>
-                <td>{proj.status === 1 ? <span className="badge badge-success">활성</span> : <span className="badge badge-danger">비활성</span>}</td>
-                <td>
-                  <button className="btn btn-sm" style={{background:'#dc3545',color:'white'}} onClick={() => onDelete(proj.projectId)}>삭제</button>
+            {projects.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '30px' }}>
+                  등록된 프로젝트가 없습니다.
                 </td>
               </tr>
-            ))}
+            ) : (
+              projects.map((proj) => (
+                <tr key={proj.projectId}>
+                  <td>{proj.projectNo ?? '-'}</td>
+
+                  <td>
+                    <strong>{proj.title}</strong>
+                    <div style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--text-gray)',
+                    }}>
+                      {proj.description}
+                    </div>
+                  </td>
+
+                  <td>{proj.slug || '-'}</td>
+
+                  <td>{proj.category || '-'}</td>
+
+                  <td>
+                    {proj.status === 1
+                      ? <span className="badge badge-success">공개</span>
+                      : <span className="badge badge-warning">비공개</span>
+                    }
+                  </td>
+
+                  <td>
+                    <div className="action-buttons">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-primary"
+                        onClick={() => openEditForm(proj)}
+                      >
+                        수정
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-sm"
+                        style={{
+                          background: '#dc3545',
+                          color: 'white',
+                        }}
+                        onClick={() => onDelete(proj.projectId)}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
 
 /* ========== 문의 관리 탭 ========== */
 function InquiriesTab({ inquiries, onAnswer }) {
