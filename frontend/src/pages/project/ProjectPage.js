@@ -1,48 +1,98 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import './ProjectPage.css';
+
 import { useSignedUrls } from '../../hooks/useSignedUrl.js';
+import { projectApi } from '../../api';
+
+import ChangwonBiennale from './data/ChangwonBiennale.js';
 import BulmosanGoods from './data/BulmosanGoods.js';
 
-const projects = [
+// 기존 정적 프로젝트
+const staticProjects = [
   {
-    id: 'changwon-biennale',
+    ...ChangwonBiennale,
     number: '01',
-    title: '창원 비엔날레',
-    description: '2026년 창원조각비엔날레 지도프로젝트.',
-    image: '/images/projects/ChangwonBiennalePage/changwonmain.png',
   },
   {
-    id: 'bulmosan-goods',
+    ...BulmosanGoods,
     number: '02',
-    title: '불모산 굿즈',
-    description: '창원의 불모산과 지역의 이야기를 담은 문화상품 개발',
-    storage: {
-      bucket: 'spr_sg',
-      path: BulmosanGoods.storage?.paths?.[0] || null,
-    },
   },
   {
     id: 'lantern-project',
     number: '03',
-    title: '인터넷 소원연등 ',
+    title: '인터넷 소원연등',
     description: '인터넷 소원연등 프로젝트',
+    image: null,
     storage: {
       bucket: 'spr_sg',
-      path: '56PPlbSdz0Xk59Mfsl_EVBYcBWxDHmjokGB7k676N07ISlHbCSgOnkth7u12Ww8yZWg2qwUteIxt3qDutv5s-RgGpCacRDPMzb2Ud3fWmYyPohpUJqHjxShq3ny3I4QDvm7kqRUThxtlbJq28zEA10GhNbq1vqtu_nFKSnrft8fUNdvJIOcMSq5ZjNuLCDVW.jpg',
+      paths: [
+        '56PPlbSdz0Xk59Mfsl_EVBYcBWxDHmjokGB7k676N07ISlHbCSgOnkth7u12Ww8yZWg2qwUteIxt3qDutv5s-RgGpCacRDPMzb2Ud3fWmYyPohpUJqHjxShq3ny3I4QDvm7kqRUThxtlbJq28zEA10GhNbq1vqtu_nFKSnrft8fUNdvJIOcMSq5ZjNuLCDVW.jpg',
+      ],
     },
-    link:'/lantern',
+    link: '/lantern',
   },
-  
 ];
 
 function ProjectPage() {
-  const storagePaths = projects
-    .map((project) => project.storage?.path)
-    .filter(Boolean);
+  const [dbProjects, setDbProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 공개 프로젝트 조회
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const response = await projectApi.getProjects(1, 100);
+
+        const rows = response?.data?.projects || [];
+
+        const convertedProjects = rows.map((item) => ({
+          id: String(item.projectId),
+          slug: item.slug,
+          number: String(item.projectNo || ''),
+          title: item.title,
+          description: item.description || '',
+          image: null,
+          storage: {
+            bucket: 'spr_sg',
+            paths: item.imageUrl ? [item.imageUrl] : [],
+          },
+        }));
+
+        setDbProjects(convertedProjects);
+      } catch (error) {
+        console.error('프로젝트 목록 조회 실패:', error);
+        setDbProjects([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  // 정적 프로젝트와 DB 프로젝트 결합
+  const projects = [
+    ...staticProjects.filter(
+      (staticProject) =>
+        !dbProjects.some(
+          (dbProject) =>
+            dbProject.slug === staticProject.id
+        )
+    ),
+    ...dbProjects,
+  ];
+
+  // 이미지 경로 수집
+  const storagePaths = projects.flatMap((project) =>
+    project.storage?.paths || []
+  );
 
   const signedUrls = useSignedUrls(storagePaths);
 
+  // 이미지 경로와 실제 URL 연결
   const signedUrlMap = signedUrls.reduce((map, item) => {
     if (item?.path && item?.signedUrl) {
       map[item.path] = item.signedUrl;
@@ -66,13 +116,20 @@ function ProjectPage() {
         </p>
       </section>
 
+      {loading && (
+        <p className="project-loading">
+          프로젝트를 불러오는 중입니다.
+        </p>
+      )}
+
       <section className="projects-grid">
         {projects.map((project) => {
-          const imageSrc = project.storage?.path
-            ? signedUrlMap[project.storage.path]
-            : project.image;
+          const storagePath =
+            project.storage?.paths?.[0];
 
-          const isStorageImage = Boolean(project.storage?.path);
+          const imageSrc = storagePath
+            ? signedUrlMap[storagePath]
+            : project.image;
 
           return (
             <Link
@@ -86,25 +143,17 @@ function ProjectPage() {
                   <img
                     src={imageSrc}
                     alt={project.title}
+                    loading="lazy"
                   />
                 ) : (
-                  <div
-                    className="proj-thumbnail-loading"
-                    aria-label={`${project.title} 이미지 불러오는 중`}
-                  >
+                  <div className="proj-thumbnail-loading">
                     <span>IMAGE LOADING...</span>
                   </div>
                 )}
 
                 <span className="proj-num">
-                  {project.number}
+                  {String(project.number).padStart(2, '0')}
                 </span>
-
-                {isStorageImage && !imageSrc && (
-                  <span className="proj-image-status">
-                    불러오는 중
-                  </span>
-                )}
 
               </div>
 

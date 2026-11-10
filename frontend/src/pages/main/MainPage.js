@@ -5,6 +5,7 @@ import './MainPage.css';
 
 import { useSignedUrls } from '../../hooks/useSignedUrl';
 
+import { projectApi } from '../../api';
 import ChangwonBiennale from '../project/data/ChangwonBiennale';
 import BulmosanGoods from '../project/data/BulmosanGoods';
 
@@ -13,7 +14,8 @@ import BulmosanGoods from '../project/data/BulmosanGoods';
 // 프로젝트 데이터
 // ======================================================
 
-const projects = [
+// 기존에 직접 작성한 프로젝트는 계속 유지
+const staticProjects = [
   ChangwonBiennale,
   BulmosanGoods,
 ];
@@ -24,6 +26,51 @@ const projects = [
 // ======================================================
 
 function MainPage() {
+    // MySQL에서 가져온 프로젝트
+  const [dbProjects, setDbProjects] = useState([]);
+
+  // 공개 프로젝트 목록 불러오기
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const response = await projectApi.getProjects(1, 100);
+
+        const rows = response?.data?.projects || [];
+
+        const convertedProjects = rows.map((item) => ({
+          id: String(item.projectId),
+          slug: item.slug,
+          number: String(item.projectNo || ''),
+          title: item.title,
+          description: item.description || '',
+          image: null,
+          storage: {
+            bucket: 'spr_sg',
+            paths: item.imageUrl ? [item.imageUrl] : [],
+          },
+        }));
+
+        setDbProjects(convertedProjects);
+      } catch (error) {
+        console.error('메인 프로젝트 조회 실패:', error);
+        setDbProjects([]);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  // 기존 프로젝트와 DB 프로젝트 결합
+  const projects = [
+    ...staticProjects.filter(
+      (staticProject) =>
+        !dbProjects.some(
+          (dbProject) =>
+            dbProject.slug === staticProject.id
+        )
+    ),
+    ...dbProjects,
+  ];
 
   // ====================================================
   // 메인 슬라이드 이미지
