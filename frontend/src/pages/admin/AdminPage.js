@@ -7,7 +7,6 @@ import {
   inquiryApi,
   magazineApi,
 } from '../../api';
-import { supabase } from '../../libs/supabaseClient';
 import './AdminPage.css';
 
 /* =========================================
@@ -774,52 +773,29 @@ function ProjectsTab({ projects = [], onDelete, onRefresh }) {
     setSaving(true);
     setError('');
 
-    let uploadedFilePath = null;
-
+   
     try {
       /* 기존 이미지 경로 */
       let imageUrl = form.imageUrl;
 
-      /* 새 이미지가 선택되었을 때 Supabase 업로드 */
-      if (imageFile) {
-        const extensionMap = {
-          'image/jpeg': 'jpg',
-          'image/png': 'png',
-          'image/webp': 'webp',
-        };
+     
+      
+/* 새 이미지가 선택되었을 때 백엔드를 통해 업로드 */
+if (imageFile) {
+  const uploadResult = await projectApi.uploadProjectImage(
+    imageFile,
+    slug
+  );
 
-        const extension = extensionMap[imageFile.type];
+  if (!uploadResult?.imageUrl) {
+    throw new Error(
+      uploadResult?.message || '이미지 업로드 결과를 확인할 수 없습니다.'
+    );
+  }
 
-        if (!extension) {
-          throw new Error(
-            'JPG, PNG, WEBP 이미지만 업로드할 수 있습니다.'
-          );
-        }
+  imageUrl = uploadResult.imageUrl;
+}
 
-        if (imageFile.size > 5 * 1024 * 1024) {
-          throw new Error('이미지는 5MB 이하로 업로드해 주세요.');
-        }
-
-        const filePath =
-          `projects/${slug}/${Date.now()}-${Math.random()
-            .toString(36)
-            .slice(2, 8)}.${extension}`;
-
-        const { data, error: uploadError } = await supabase
-          .storage
-          .from('spr_sg')
-          .upload(filePath, imageFile, {
-            contentType: imageFile.type,
-            upsert: false,
-          });
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        uploadedFilePath = data.path;
-        imageUrl = data.path;
-      }
 
       /* MySQL에 저장할 데이터 */
       const payload = {
@@ -861,17 +837,7 @@ function ProjectsTab({ projects = [], onDelete, onRefresh }) {
     } catch (err) {
       console.error('프로젝트 저장 오류:', err);
 
-      /* DB 저장 실패 시 업로드 파일 정리 */
-      if (uploadedFilePath) {
-        const { error: removeError } = await supabase
-          .storage
-          .from('spr_sg')
-          .remove([uploadedFilePath]);
-
-        if (removeError) {
-          console.error('업로드 파일 정리 실패:', removeError);
-        }
-      }
+      
 
       setError(
         err?.response?.data?.message ||
