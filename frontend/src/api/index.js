@@ -54,6 +54,8 @@ export const eventApi = {
 };
 
 // Project API
+
+// Project API
 export const projectApi = {
   getProjects: (page = 1, size = 9) =>
     api.get(`/projects?page=${page}&size=${size}`),
@@ -63,18 +65,30 @@ export const projectApi = {
     api.get(`/projects/admin?page=${page}&size=${size}`),
 
   getProject: (id) => api.get(`/projects/${id}`),
-  createProject: (data) => api.post('/projects', data),
-  updateProject: (id, data) => api.put(`/projects/${id}`, data),
-  deleteProject: (id) => api.delete(`/projects/${id}`),
 
-   // Supabase 이미지 업로드는 백엔드 관리자 API를 통해 처리
+  createProject: (data) =>
+    api.post('/projects', data),
+
+  updateProject: (id, data) =>
+    api.put(`/projects/${id}`, data),
+
+  deleteProject: (id) =>
+    api.delete(`/projects/${id}`),
+
+  // 백엔드를 통한 관리자 이미지 업로드
   uploadProjectImage: (file, slug) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('slug', slug);
 
-    return api.post('/projects/upload-image', formData);
+    return api.post('/projects/upload-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };
+
 
 // Inquiry API
 export const inquiryApi = {
