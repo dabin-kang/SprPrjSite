@@ -344,10 +344,592 @@ function EventsTab({ events, onDelete, onRefresh }) {
   );
 }
 
+
 /* ========== 프로젝트 관리 탭 ========== */
 
 /* ========== 프로젝트 관리 탭 ========== */
-function ProjectsTab({ projects, onDelete, onRefresh }) {
+function ProjectsTab({ projects = [], onDelete, onRefresh }) {
+  const emptyForm = {
+    title: '',
+    description: '',
+    slug: '',
+    projectNo: '',
+    category: '',
+    techStack: '',
+    projectUrl: '',
+    imageUrl: '',
+    sortOrder: '0',
+    status: '0',
+  };
+
+  const [form, setForm] = useState({ ...emptyForm });
+  const [imageFile, setImageFile] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  // 입력값 변경
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 새 프로젝트 등록
+  const openCreateForm = () => {
+    setEditingId(null);
+    setForm({ ...emptyForm });
+    setImageFile(null);
+    setError('');
+    setShowForm(true);
+  };
+
+  // 기존 프로젝트 수정
+  const openEditForm = (project) => {
+    setEditingId(project.projectId);
+
+    setForm({
+      title: project.title || '',
+      description: project.description || '',
+      slug: project.slug || '',
+      projectNo: String(project.projectNo ?? ''),
+      category: project.category || '',
+      techStack: project.techStack || '',
+      projectUrl: project.projectUrl || '',
+      imageUrl: project.imageUrl || '',
+      sortOrder: String(project.sortOrder ?? 0),
+      status: String(project.status ?? 0),
+    });
+
+    setImageFile(null);
+    setError('');
+    setShowForm(true);
+  };
+
+  // 프로젝트 등록 및 수정
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    if (saving) return;
+
+    const title = form.title.trim();
+    const slug = form.slug.trim();
+
+    // 필수값 검사
+    if (!title) {
+      setError('프로젝트 제목을 입력해 주세요.');
+      return;
+    }
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+      setError(
+        'URL 식별자는 영문 소문자, 숫자, 하이픈만 사용할 수 있습니다.'
+      );
+      return;
+    }
+
+    if (!form.projectNo || Number(form.projectNo) < 1) {
+      setError('프로젝트 번호를 1 이상으로 입력해 주세요.');
+      return;
+    }
+
+    if (![0, 1].includes(Number(form.status))) {
+      setError('공개 상태를 확인해 주세요.');
+      return;
+    }
+
+    setSaving(true);
+    setError('');
+
+    let uploadedFilePath = null;
+
+    try {
+      // 기존 이미지 경로 유지
+      let imageUrl = form.imageUrl;
+
+      // 새 이미지가 선택된 경우
+      if (imageFile) {
+        const extensionMap = {
+          'image/jpeg': 'jpg',
+          'image/png': 'png',
+          'image/webp': 'webp',
+        };
+
+        const extension = extensionMap[imageFile.type];
+
+        if (!extension) {
+          throw new Error(
+            'JPG, PNG, WEBP 이미지만 업로드할 수 있습니다.'
+          );
+        }
+
+        if (imageFile.size > 5 * 1024 * 1024) {
+          throw new Error('이미지는 5MB 이하로 업로드해 주세요.');
+        }
+
+        // Supabase 저장 경로
+        const filePath =
+          `projects/${slug}/${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2, 8)}.${extension}`;
+
+        const { data, error: uploadError } = await supabase
+          .storage
+          .from('spr_sg')
+          .upload(filePath, imageFile, {
+            contentType: imageFile.type,
+            upsert: false,
+          });
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        uploadedFilePath = data.path;
+        imageUrl = data.path;
+      }
+
+      // MySQL 저장 데이터
+      const payload = {
+        title,
+        description: form.description.trim(),
+        slug,
+        projectNo: Number(form.projectNo),
+        category: form.category.trim(),
+        techStack: form.techStack.trim(),
+        projectUrl: form.projectUrl.trim(),
+        imageUrl,
+        sortOrder: Number(form.sortOrder || 0),
+        status: Number(form.status),
+      };
+
+      // 등록 또는 수정 API 호출
+      if (editingId !== null) {
+        await projectApi.updateProject(editingId, payload);
+      } else {
+        await projectApi.createProject(payload);
+      }
+
+      // 목록 새로고침
+      await onRefresh();
+
+      alert(
+        editingId !== null
+          ? '프로젝트가 수정되었습니다.'
+          : '프로젝트가 등록되었습니다.'
+      );
+
+      // 입력 폼 초기화
+      setShowForm(false);
+      setEditingId(null);
+      setForm({ ...emptyForm });
+      setImageFile(null);
+      setError('');
+
+    } catch (err) {
+      console.error('프로젝트 저장 오류:', err);
+
+      // DB 저장 실패 시 새로 올린 파일 정리 시도
+      if (uploadedFilePath) {
+        const { error: removeError } = await supabase
+          .storage
+          .from('spr_sg')
+          .remove([uploadedFilePath]);
+
+        if (removeError) {
+          console.error('업로드 파일 정리 실패:', removeError);
+        }
+      }
+
+      setError(
+        err?.response?.data?.message ||
+        err?.message ||
+        '프로젝트 저장에 실패했습니다.'
+      );
+
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // 취소
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setForm({ ...emptyForm });
+    setImageFile(null);
+    setError('');
+  };
+
+  return (
+    <div className="projects-admin">
+
+      {/* 프로젝트 관리 상단 */}
+      <div style={{
+        marginBottom: '20px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <div>
+          <h3>프로젝트 관리</h3>
+          <p style={{
+            color: 'var(--text-gray)',
+            fontSize: '0.85rem',
+          }}>
+            총 {projects.length}개의 프로젝트
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={openCreateForm}
+        >
+          + 프로젝트 등록
+        </button>
+      </div>
+
+      {/* 등록 및 수정 폼 */}
+      {showForm && (
+        <div className="card" style={{ marginBottom: '24px' }}>
+          <div className="card-body">
+
+            <h3 style={{ marginBottom: '20px' }}>
+              {editingId !== null
+                ? '프로젝트 수정'
+                : '새 프로젝트 등록'}
+            </h3>
+
+            <form onSubmit={handleSave}>
+
+              {/* 프로젝트 제목 */}
+              <div className="form-group">
+                <label className="form-label">
+                  프로젝트 제목 *
+                </label>
+
+                <input
+                  className="form-control"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  placeholder="예: 창원 비엔날레"
+                  required
+                />
+              </div>
+
+              {/* 프로젝트 설명 */}
+              <div className="form-group">
+                <label className="form-label">
+                  프로젝트 설명
+                </label>
+
+                <textarea
+                  className="form-control"
+                  name="description"
+                  rows={3}
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="프로젝트 설명을 입력해 주세요."
+                />
+              </div>
+
+              {/* 대표 이미지 */}
+              <div className="form-group">
+                <label className="form-label">
+                  대표 이미지
+                </label>
+
+                <input
+                  type="file"
+                  className="form-control"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => {
+                    setImageFile(e.target.files?.[0] || null);
+                  }}
+                />
+
+                {imageFile && (
+                  <small>
+                    선택한 파일: {imageFile.name}
+                  </small>
+                )}
+
+                {form.imageUrl && !imageFile && (
+                  <small>
+                    새 이미지를 선택하지 않으면 기존 이미지가 유지됩니다.
+                  </small>
+                )}
+              </div>
+
+              {/* URL 식별자 및 프로젝트 번호 */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '16px',
+              }}>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    URL 식별자 *
+                  </label>
+
+                  <input
+                    className="form-control"
+                    name="slug"
+                    value={form.slug}
+                    onChange={handleChange}
+                    placeholder="changwon-biennale"
+                    required
+                  />
+
+                  <small>
+                    영문 소문자, 숫자, 하이픈만 사용합니다.
+                  </small>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    프로젝트 번호 *
+                  </label>
+
+                  <input
+                    type="number"
+                    min="1"
+                    className="form-control"
+                    name="projectNo"
+                    value={form.projectNo}
+                    onChange={handleChange}
+                    placeholder="예: 3"
+                    required
+                  />
+                </div>
+
+              </div>
+
+              {/* 카테고리 */}
+              <div className="form-group">
+                <label className="form-label">카테고리</label>
+
+                <input
+                  className="form-control"
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  placeholder="예: 문화, 디자인, 상품개발"
+                />
+              </div>
+
+              {/* 기술 스택 */}
+              <div className="form-group">
+                <label className="form-label">기술 스택</label>
+
+                <input
+                  className="form-control"
+                  name="techStack"
+                  value={form.techStack}
+                  onChange={handleChange}
+                  placeholder="React, Spring Boot, MySQL"
+                />
+              </div>
+
+              {/* 외부 프로젝트 URL */}
+              <div className="form-group">
+                <label className="form-label">
+                  외부 프로젝트 URL
+                </label>
+
+                <input
+                  type="url"
+                  className="form-control"
+                  name="projectUrl"
+                  value={form.projectUrl}
+                  onChange={handleChange}
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              {/* 정렬 순서 및 공개 상태 */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '16px',
+              }}>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    정렬 순서
+                  </label>
+
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="sortOrder"
+                    value={form.sortOrder}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    공개 상태
+                  </label>
+
+                  <select
+                    className="form-control"
+                    name="status"
+                    value={form.status}
+                    onChange={handleChange}
+                  >
+                    <option value="0">비공개</option>
+                    <option value="1">공개</option>
+                  </select>
+                </div>
+
+              </div>
+
+              {/* 오류 표시 */}
+              {error && (
+                <div style={{
+                  padding: '12px',
+                  marginBottom: '16px',
+                  background: '#fff0f0',
+                  color: '#c62828',
+                  borderRadius: '6px',
+                }}>
+                  {error}
+                </div>
+              )}
+
+              {/* 저장 및 취소 */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '8px',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCancel}
+                  disabled={saving}
+                >
+                  취소
+                </button>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={saving}
+                >
+                  {saving
+                    ? '저장 중...'
+                    : editingId !== null
+                      ? '수정 저장'
+                      : '프로젝트 등록'}
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 프로젝트 목록 */}
+      <div className="table-wrap">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>프로젝트</th>
+              <th>URL 식별자</th>
+              <th>카테고리</th>
+              <th>상태</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {projects.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="6"
+                  style={{
+                    textAlign: 'center',
+                    padding: '30px',
+                  }}
+                >
+                  등록된 프로젝트가 없습니다.
+                </td>
+              </tr>
+            ) : (
+              projects.map((proj) => (
+                <tr key={proj.projectId}>
+                  <td>{proj.projectNo ?? '-'}</td>
+
+                  <td>
+                    <strong>{proj.title}</strong>
+                    <div style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--text-gray)',
+                    }}>
+                      {proj.description}
+                    </div>
+                  </td>
+
+                  <td>{proj.slug || '-'}</td>
+                  <td>{proj.category || '-'}</td>
+
+                  <td>
+                    {Number(proj.status) === 1 ? (
+                      <span className="badge badge-success">
+                        공개
+                      </span>
+                    ) : (
+                      <span className="badge badge-warning">
+                        비공개
+                      </span>
+                    )}
+                  </td>
+
+                  <td>
+                    <div className="action-buttons">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-primary"
+                        onClick={() => openEditForm(proj)}
+                      >
+                        수정
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-sm"
+                        style={{
+                          background: '#dc3545',
+                          color: 'white',
+                        }}
+                        onClick={() => onDelete(proj.projectId)}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  );
+}
+
 
   // 신규 프로젝트 기본값
   const emptyForm = {
@@ -938,7 +1520,6 @@ function ProjectsTab({ projects, onDelete, onRefresh }) {
 
     </div>
   );
-}
 
 
   const [form, setForm] = useState(emptyForm);
