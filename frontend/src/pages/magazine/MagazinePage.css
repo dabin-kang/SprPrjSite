@@ -31,16 +31,26 @@
 }
 
 .mag-card {
+  display: block;
   padding: 0;
   border: 0;
   color: inherit;
   font: inherit;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.mag-thumbnail,
-.magazine-modal-thumbnail {
+.mag-card:hover {
+  transform: translateY(-4px);
+}
+
+.mag-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.mag-thumbnail {
   position: relative;
   height: 180px;
   display: flex;
@@ -49,8 +59,7 @@
   overflow: hidden;
 }
 
-.mag-thumbnail img,
-.magazine-modal-thumbnail img {
+.mag-thumbnail img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -58,8 +67,7 @@
   object-fit: cover;
 }
 
-.mag-thumbnail::after,
-.magazine-modal-thumbnail::after {
+.mag-thumbnail::after {
   position: absolute;
   inset: 0;
   background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.45));
@@ -105,61 +113,6 @@
   align-items: center;
   gap: 14px;
   margin-top: 28px;
-}
-
-.magazine-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.55);
-}
-
-.magazine-modal-content {
-  position: relative;
-  width: min(600px, 100%);
-  max-height: 90vh;
-  overflow: auto;
-  border-radius: var(--radius);
-  background: #fff;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-.magazine-modal-thumbnail {
-  height: 220px;
-}
-
-.magazine-modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  z-index: 2;
-  width: 34px;
-  height: 34px;
-  border: 0;
-  border-radius: 50%;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.45);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.magazine-modal-body {
-  padding: 24px;
-}
-
-.magazine-modal-body h2 {
-  margin: 0;
-  color: var(--primary);
-}
-
-.magazine-modal-body .modal-desc {
-  margin-top: 18px;
-  line-height: 1.8;
-  white-space: pre-wrap;
 }
 
 @media (max-width: 900px) {

@@ -59,9 +59,13 @@ public class MagazineService {
         return magazineMapper.findByCategory(category, getOffset(page, size), size);
     }
 
-    public void createMagazine(Magazine magazine) {
+    public Long createMagazine(Magazine magazine) {
         validate(magazine);
-        magazineMapper.insert(magazine);
+        int inserted = magazineMapper.insert(magazine);
+        if (inserted != 1 || magazine.getMagazineId() == null) {
+            throw new IllegalStateException("매거진 등록 결과 ID를 확인할 수 없습니다.");
+        }
+        return magazine.getMagazineId();
     }
 
     public void updateMagazine(Magazine magazine) {

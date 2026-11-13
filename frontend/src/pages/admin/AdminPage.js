@@ -24,13 +24,16 @@ function AdminPage() {
   return (
     <div className="admin-page">
       <aside className="admin-sidebar">
-        <div className="admin-logo">
-          <span className="logo-sp">SP</span>REVN
-          <br />
-          <small>관리자</small>
+        <div className="admin-brand">
+          <span className="admin-brand-mark">S</span>
+          <span className="admin-brand-copy">
+            <strong>SPREVN</strong>
+            <small>CONTROL CENTER</small>
+          </span>
         </div>
+        <p className="admin-nav-caption">WORKSPACE</p>
         <nav className="admin-nav" aria-label="관리자 메뉴">
-          {TABS.map((tab) => (
+          {TABS.map((tab, index) => (
             <button
               key={tab.key}
               type="button"
@@ -38,15 +41,34 @@ function AdminPage() {
               aria-current={activeTab === tab.key ? 'page' : undefined}
               onClick={() => setActiveTab(tab.key)}
             >
-              {tab.label}
+              <span className="admin-nav-index">{String(index + 1).padStart(2, '0')}</span>
+              <span>{tab.label}</span>
+              <span className="admin-nav-arrow" aria-hidden="true">›</span>
             </button>
           ))}
         </nav>
+        <div className="admin-sidebar-status">
+          <span className="admin-status-dot" />
+          <span>
+            <strong>관리자 작업 공간</strong>
+            <small>콘텐츠 운영 콘솔</small>
+          </span>
+        </div>
       </aside>
 
       <main className="admin-content">
         <header className="admin-topbar">
-          <h1>{active.label}</h1>
+          <div>
+            <p className="admin-breadcrumb">관리자 콘솔 <span>/</span> {active.label}</p>
+            <h1>{active.label}</h1>
+          </div>
+          <div className="admin-profile">
+            <span className="admin-profile-avatar">관</span>
+            <span>
+              <strong>관리자</strong>
+              <small>Administrator</small>
+            </span>
+          </div>
         </header>
         <div className="admin-body">
           <ActiveTab />

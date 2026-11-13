@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { magazineApi } from '../../api';
 import './MagazinePage.css';
 
@@ -26,10 +27,6 @@ function MagazinePage() {
   const [retryCount, setRetryCount] = useState(0);
   const [total, setTotal] = useState(0);
   const [category, setCategory] = useState('');
-  const [selected, setSelected] = useState(null);
-  const [detailLoading, setDetailLoading] = useState(false);
-  const [detailError, setDetailError] = useState('');
-  const detailRequestId = useRef(0);
 
   useEffect(() => {
     let active = true;
@@ -63,55 +60,12 @@ function MagazinePage() {
     };
   }, [page, category, retryCount]);
 
-  useEffect(() => {
-    if (!selected) return undefined;
-    const closeOnEscape = (event) => {
-      if (event.key === 'Escape') {
-        detailRequestId.current += 1;
-        setSelected(null);
-      }
-    };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
-  }, [selected]);
-
   const handleCategoryChange = (nextCategory) => {
     setCategory(nextCategory === '전체' ? '' : nextCategory);
     setPage(1);
   };
 
-  const openMagazine = async (magazine) => {
-    const requestId = detailRequestId.current + 1;
-    detailRequestId.current = requestId;
-    setSelected(magazine);
-    setDetailLoading(true);
-    setDetailError('');
-
-    try {
-      const response = await magazineApi.getMagazine(magazine.magazineId);
-      if (!response?.data?.magazineId) {
-        throw new Error('매거진 상세 응답이 올바르지 않습니다.');
-      }
-      if (detailRequestId.current === requestId) setSelected(response.data);
-    } catch (requestError) {
-      if (detailRequestId.current === requestId) {
-        setDetailError(getErrorMessage(requestError, '매거진 상세를 불러오지 못했습니다.'));
-      }
-    } finally {
-      if (detailRequestId.current === requestId) setDetailLoading(false);
-    }
-  };
-
-  const closeMagazine = () => {
-    detailRequestId.current += 1;
-    setSelected(null);
-  };
-
   const totalPages = Math.ceil(total / PAGE_SIZE);
-  const selectedIndex = selected
-    ? magazines.findIndex((magazine) => magazine.magazineId === selected.magazineId)
-    : 0;
-  const selectedGradient = GRADIENTS[Math.max(0, selectedIndex) % GRADIENTS.length];
 
   return (
     <div className="magazine-page">
@@ -156,11 +110,10 @@ function MagazinePage() {
             <>
               <div className="magazines-grid">
                 {magazines.map((magazine, index) => (
-                  <button
+                  <Link
                     key={magazine.magazineId}
-                    type="button"
+                    to={`/magazine/${magazine.magazineId}`}
                     className="mag-card card"
-                    onClick={() => openMagazine(magazine)}
                   >
                     <div className="mag-thumbnail" style={{ background: GRADIENTS[index % GRADIENTS.length] }}>
                       {magazine.thumbnail && (
@@ -177,7 +130,7 @@ function MagazinePage() {
                         </time>
                       </div>
                     </div>
-                  </button>
+                  </Link>
                 ))}
               </div>
 
@@ -207,36 +160,6 @@ function MagazinePage() {
         </div>
       </section>
 
-      {selected && (
-        <div
-          className="magazine-modal-overlay"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) closeMagazine();
-          }}
-        >
-          <article className="magazine-modal-content" role="dialog" aria-modal="true" aria-labelledby="magazine-title">
-            <button type="button" className="magazine-modal-close" onClick={closeMagazine} aria-label="닫기">
-              ×
-            </button>
-            <div className="magazine-modal-thumbnail" style={{ background: selectedGradient }}>
-              {selected.thumbnail && <img src={selected.thumbnail} alt="" />}
-              <span className="mag-category-badge">{selected.category || '미분류'}</span>
-            </div>
-            <div className="magazine-modal-body">
-              <h2 id="magazine-title">{selected.title}</h2>
-              <div className="mag-meta">
-                <span>조회 {selected.viewCount?.toLocaleString() || 0}</span>
-                <time dateTime={selected.createdAt}>
-                  {selected.createdAt?.split('T')[0] || '날짜 미정'}
-                </time>
-              </div>
-              {detailLoading && <p role="status">내용을 불러오는 중입니다.</p>}
-              {detailError && <p className="magazine-error" role="alert">{detailError}</p>}
-              <p className="modal-desc">{selected.content || '등록된 내용이 없습니다.'}</p>
-            </div>
-          </article>
-        </div>
-      )}
     </div>
   );
 }

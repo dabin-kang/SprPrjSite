@@ -65,9 +65,9 @@ public class MagazineController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> createMagazine(@RequestBody Magazine magazine) {
-        magazineService.createMagazine(magazine);
-        return ResponseEntity.ok(ApiResponse.success("매거진이 등록되었습니다", null));
+    public ResponseEntity<ApiResponse<Long>> createMagazine(@RequestBody Magazine magazine) {
+        Long magazineId = magazineService.createMagazine(magazine);
+        return ResponseEntity.ok(ApiResponse.success("매거진이 등록되었습니다", magazineId));
     }
 
     @PutMapping("/{magazineId}")

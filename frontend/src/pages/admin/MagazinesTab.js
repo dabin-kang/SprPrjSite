@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { magazineApi } from '../../api';
 import { Field, FormError, getErrorMessage, ListState, Pagination, useAdminList } from './CmsShared';
 
@@ -13,6 +14,7 @@ const EMPTY_MAGAZINE = {
 const CATEGORIES = ['트렌드', '기술', '비즈니스', '디자인'];
 
 function MagazinesTab() {
+  const navigate = useNavigate();
   const list = useAdminList(magazineApi.getAdminMagazines, 'magazines');
   const [form, setForm] = useState(EMPTY_MAGAZINE);
   const [editingId, setEditingId] = useState(null);
@@ -53,8 +55,17 @@ function MagazinesTab() {
       status: Number(form.status),
     };
     try {
-      if (editingId === null) await magazineApi.createMagazine(payload);
-      else await magazineApi.updateMagazine(editingId, payload);
+      if (editingId === null) {
+        const response = await magazineApi.createMagazine(payload);
+        const magazineId = response?.data;
+        if (!Number.isSafeInteger(magazineId) || magazineId <= 0) {
+          throw new Error('등록한 매거진 ID를 확인할 수 없습니다.');
+        }
+        navigate(`/magazine/${magazineId}`);
+        return;
+      }
+
+      await magazineApi.updateMagazine(editingId, payload);
       setFormOpen(false);
       setEditingId(null);
       await list.reload();
@@ -91,6 +102,9 @@ function MagazinesTab() {
         <form className="card admin-editor" onSubmit={handleSave}>
           <div className="card-body">
             <h3>{editingId === null ? '새 매거진 등록' : '매거진 수정'}</h3>
+            {editingId === null && (
+              <p className="admin-editor-hint">등록이 완료되면 매거진 상세 페이지로 이동합니다.</p>
+            )}
             <Field label="제목">
               <input
                 className="form-control"
@@ -168,6 +182,12 @@ function MagazinesTab() {
                   <td>{magazine.status === 1 ? '공개' : '비공개'}</td>
                   <td>
                     <div className="action-buttons">
+                      <Link
+                        className="btn btn-sm btn-secondary"
+                        to={`/magazine/${magazine.magazineId}`}
+                      >
+                        상세
+                      </Link>
                       <button type="button" className="btn btn-sm btn-primary" onClick={() => openEdit(magazine)}>수정</button>
                       <button type="button" className="btn btn-sm btn-danger" onClick={() => handleDelete(magazine.magazineId)}>삭제</button>
                     </div>

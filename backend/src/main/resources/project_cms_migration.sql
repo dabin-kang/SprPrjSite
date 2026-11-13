@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS spr_project_image (
     project_id BIGINT NOT NULL,
     section_id BIGINT NULL,
 
-    image_url VARCHAR(1000) NOT NULL,
+    storage_path VARCHAR(1000) NOT NULL,
     image_alt VARCHAR(300) NULL,
 
     image_type VARCHAR(50) NOT NULL DEFAULT 'CONTENT',
@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS spr_project_image (
     PRIMARY KEY (image_id),
 
     INDEX idx_project_image_order (project_id, sort_order),
+    INDEX idx_project_image_section (section_id),
 
     CONSTRAINT fk_project_image
         FOREIGN KEY (project_id)

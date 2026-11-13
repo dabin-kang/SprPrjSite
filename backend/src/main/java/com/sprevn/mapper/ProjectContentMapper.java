@@ -18,7 +18,8 @@ public interface ProjectContentMapper {
     List<ProjectSection> findSections(@Param("projectId") Long projectId);
 
     @Select("""
-        SELECT image_id, project_id, section_id, image_url, image_alt, image_type, sort_order, created_at
+        SELECT image_id, project_id, section_id, storage_path AS imageUrl,
+               image_alt, image_type, sort_order, created_at
         FROM spr_project_image
         WHERE project_id = #{projectId}
         ORDER BY sort_order ASC, image_id ASC
@@ -39,7 +40,7 @@ public interface ProjectContentMapper {
     int insertSection(ProjectSection section);
 
     @Insert("""
-        INSERT INTO spr_project_image (project_id, section_id, image_url, image_alt, image_type, sort_order, created_at)
+        INSERT INTO spr_project_image (project_id, section_id, storage_path, image_alt, image_type, sort_order, created_at)
         VALUES (#{projectId}, #{sectionId}, #{imageUrl}, #{imageAlt}, #{imageType}, #{sortOrder}, NOW())
         """)
     @Options(useGeneratedKeys = true, keyProperty = "imageId")

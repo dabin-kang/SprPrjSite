@@ -13,6 +13,7 @@ import ProjectDetailPage from './pages/project/ProjectDetailPage';
 import ChangwonBiennaleMapPage from './pages/project/ChangwonBiennaleMapPage';
 import InquiryPage from './pages/inquiry/InquiryPage';
 import MagazinePage from './pages/magazine/MagazinePage';
+import MagazineDetailPage from './pages/magazine/MagazineDetailPage';
 import AdminPage from './pages/admin/AdminPage';
 import CheckPage from './pages/check/CheckPage';
 import AboutPage from './pages/about/about';
@@ -46,6 +47,7 @@ function AppRoutes() {
         <Route path="projects/changwon-biennale/map" element={<ChangwonBiennaleMapPage />} />
         <Route path="inquiry" element={<InquiryPage />} />
         <Route path="magazine" element={<MagazinePage />} />
+        <Route path="magazine/:magazineId" element={<MagazineDetailPage />} />
         <Route path="check" element={<CheckPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="lantern" element={<LanternPage />} />

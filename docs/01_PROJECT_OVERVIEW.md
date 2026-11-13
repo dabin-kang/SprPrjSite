@@ -256,9 +256,9 @@ backend/
 | 프로젝트 CMS | 등록·수정·삭제, 임시저장/공개/비공개, 정렬 및 섹션 편집 |
 | 프로젝트 이미지 | Supabase Storage 업로드 API와 대표/섹션 이미지 경로 관리 |
 | 문의 관리 | 목록·상세·답변 등록/수정·삭제 |
-| 매거진 관리 | 관리자 목록·등록·수정·삭제 및 공개 상태 관리 |
+| 매거진 관리 | 관리자 목록·등록·수정·삭제, 공개 상태 관리, 등록 직후 상세 페이지 이동 |
 | 공개 프로젝트 상세 | 공개 프로젝트 API의 본문 섹션·이미지를 렌더링 |
-| 매거진 | 공개 헤더 메뉴에서 진입, API 기반 목록·카테고리·상세 표시 |
+| 매거진 | 공개 헤더 메뉴에서 진입, API 기반 목록·카테고리·상세 페이지 표시 |
 | 미리보기 | 별도 미리보기 기능은 아직 구현되지 않음 |
 
 ### 7.3 Current Implementation
@@ -278,8 +278,8 @@ backend/
 
 ### 7.4 Outstanding Issues
 
-1. `project_cms_migration.sql`이 실제 개발/운영 MySQL에 적용되었는지 확인해야 한다.
-2. 운영 API에서 프로젝트 목록은 응답하지만 공개 프로젝트 상세는 500을 반환했다. 콘텐츠 테이블 migration 적용 여부 확인과 상세 API 재검증이 필요하다.
+1. 운영 DB의 `spr_project_image`는 `storage_path` 컬럼을 사용하지만 기존 MyBatis SQL과 migration은 `image_url`을 사용했다. 조회/저장 SQL과 기준 migration을 실제 스키마에 맞췄으며, 수정 backend 배포 후 상세/수정 API 검증이 필요하다.
+2. 운영 DB에 전달받은 CREATE TABLE 기준으로 `spr_project_image`는 존재한다. 다른 환경의 전체 migration 적용 상태는 별도 확인이 필요하다.
 3. 실제 DB와 Supabase 설정을 사용한 CMS 등록·업로드·공개 상세 end-to-end 검증이 필요하다.
 4. Vercel/Railway 운영 환경의 환경변수와 실제 배포 상태는 저장소만으로 확인할 수 없다.
 5. 프로젝트 게시 전 미리보기 기능은 미구현이다.

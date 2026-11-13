@@ -11,13 +11,15 @@
 - [x] 문의 목록·답변·삭제 관리
 - [x] 매거진 CRUD 및 공개 상태 관리
 - [x] 공개 헤더 매거진 메뉴와 API 기반 목록·상세 페이지 활성화
+- [x] 관리자 매거진 등록 후 신규 상세 페이지로 이동, 비공개 글 관리자 상세 조회
+- [x] 관리자 CMS 화면의 시각 계층 및 모바일 반응형 스타일 개선
 - [x] 이벤트 이미지/기간 필드의 명시적 비우기 처리와 서비스 단위 테스트
 - [x] 프런트엔드 production build 및 백엔드 Gradle 테스트 실행
 
 ## 후속 확인
 
-- [ ] 대상 MySQL에서 `project_cms_migration.sql` 적용 여부 확인
-- [ ] Railway MySQL에서 `project_content_tables_migration.sql` 적용 후 프로젝트 상세/수정 API 검증
+- [ ] 수정 backend를 Railway에 배포한 뒤 프로젝트 상세/수정 API 재검증
+- [ ] 다른 환경에서 `project_cms_migration.sql` 적용 및 컬럼 호환 여부 확인
 - [ ] 개발/운영 MySQL과 Supabase 설정으로 CMS CRUD 및 이미지 업로드 end-to-end 검증
 - [ ] 콘텐츠에서 참조 제거된 Supabase 파일의 정리 정책 검토 및 구현
 - [ ] 관리자 인증·권한과 각 CMS API를 실제 환경에서 검증
