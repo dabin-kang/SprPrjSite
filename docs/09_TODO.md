@@ -10,12 +10,14 @@
 - [x] DB 프로젝트 공개 상세 렌더링 연결
 - [x] 문의 목록·답변·삭제 관리
 - [x] 매거진 CRUD 및 공개 상태 관리
+- [x] 공개 헤더 매거진 메뉴와 API 기반 목록·상세 페이지 활성화
 - [x] 이벤트 이미지/기간 필드의 명시적 비우기 처리와 서비스 단위 테스트
 - [x] 프런트엔드 production build 및 백엔드 Gradle 테스트 실행
 
 ## 후속 확인
 
 - [ ] 대상 MySQL에서 `project_cms_migration.sql` 적용 여부 확인
+- [ ] Railway MySQL에서 `project_content_tables_migration.sql` 적용 후 프로젝트 상세/수정 API 검증
 - [ ] 개발/운영 MySQL과 Supabase 설정으로 CMS CRUD 및 이미지 업로드 end-to-end 검증
 - [ ] 콘텐츠에서 참조 제거된 Supabase 파일의 정리 정책 검토 및 구현
 - [ ] 관리자 인증·권한과 각 CMS API를 실제 환경에서 검증
