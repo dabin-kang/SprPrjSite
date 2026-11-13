@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { magazineApi } from '../../api';
 import { Field, FormError, getErrorMessage, ListState, Pagination, useAdminList } from './CmsShared';
+import MagazineContentEditor from './MagazineContentEditor';
 
 const EMPTY_MAGAZINE = {
   title: '',
@@ -15,6 +16,7 @@ const CATEGORIES = ['트렌드', '기술', '비즈니스', '디자인'];
 
 function MagazinesTab() {
   const navigate = useNavigate();
+  const contentEditorRef = useRef(null);
   const list = useAdminList(magazineApi.getAdminMagazines, 'magazines');
   const [form, setForm] = useState(EMPTY_MAGAZINE);
   const [editingId, setEditingId] = useState(null);
@@ -49,7 +51,7 @@ function MagazinesTab() {
     const payload = {
       ...form,
       title: form.title.trim(),
-      content: form.content.trim(),
+      content: contentEditorRef.current?.getContent().trim() ?? form.content.trim(),
       category: form.category || null,
       thumbnail: form.thumbnail.trim() || null,
       status: Number(form.status),
@@ -146,11 +148,10 @@ function MagazinesTab() {
               />
             </Field>
             <Field label="내용">
-              <textarea
-                className="form-control"
-                rows={8}
-                value={form.content}
-                onChange={(e) => setForm({ ...form, content: e.target.value })}
+              <MagazineContentEditor
+                ref={contentEditorRef}
+                initialContent={form.content}
+                disabled={saving}
               />
             </Field>
             <FormError>{formError}</FormError>

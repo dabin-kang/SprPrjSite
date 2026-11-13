@@ -140,6 +140,26 @@
   overflow-wrap: anywhere;
 }
 
+.magazine-article-body p,
+.magazine-article-body div {
+  margin: 0 0 0.9em;
+}
+
+.magazine-article-body h2,
+.magazine-article-body h3,
+.magazine-article-body h4 {
+  margin: 1.4em 0 0.6em;
+  color: #273248;
+  line-height: 1.45;
+}
+
+.magazine-article-body blockquote {
+  margin: 1em 0;
+  padding: 8px 16px;
+  border-left: 3px solid #df8a50;
+  color: #69758a;
+}
+
 @media (max-width: 600px) {
   .magazine-detail-page {
     padding: 28px 14px 60px;

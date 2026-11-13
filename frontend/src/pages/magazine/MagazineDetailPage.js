@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { magazineApi } from '../../api';
 import { useAuth } from '../../hooks/useAuth';
+import { sanitizeMagazineContent } from '../../utils/sanitizeMagazineContent';
 import './MagazineDetailPage.css';
 
 function getErrorMessage(error, fallback) {
@@ -105,7 +106,15 @@ function MagazineDetailPage() {
               </div>
 
               <div className="magazine-article-body">
-                {magazine.content || '등록된 내용이 없습니다.'}
+                {magazine.content ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeMagazineContent(magazine.content),
+                    }}
+                  />
+                ) : (
+                  '등록된 내용이 없습니다.'
+                )}
               </div>
             </div>
           </article>
