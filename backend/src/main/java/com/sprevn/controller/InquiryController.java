@@ -1,8 +1,10 @@
 package com.sprevn.controller;
 
 import com.sprevn.dto.ApiResponse;
+import com.sprevn.dto.InquiryAnswerRequest;
 import com.sprevn.entity.Inquiry;
 import com.sprevn.service.InquiryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,8 +49,8 @@ public class InquiryController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> answerInquiry(
             @PathVariable Long inquiryId,
-            @RequestBody Map<String, String> body) {
-        inquiryService.answerInquiry(inquiryId, body.get("answer"));
+            @Valid @RequestBody InquiryAnswerRequest request) {
+        inquiryService.answerInquiry(inquiryId, request.getAnswer());
         return ResponseEntity.ok(ApiResponse.success("답변이 등록되었습니다", null));
     }
 

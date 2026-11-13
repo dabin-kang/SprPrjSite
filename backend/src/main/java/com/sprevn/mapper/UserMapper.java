@@ -56,4 +56,7 @@ public interface UserMapper {
 
     @Select("SELECT COUNT(*) FROM spr_sign WHERE email = #{email}")
     int existsByEmail(String email);
+
+    @Select("SELECT COUNT(*) FROM spr_sign WHERE email = #{email} AND user_id <> #{userId}")
+    int existsByEmailForOtherUser(@Param("email") String email, @Param("userId") Long userId);
 }

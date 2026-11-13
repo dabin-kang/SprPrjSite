@@ -15,6 +15,9 @@ public interface InquiryMapper {
     @Select("SELECT COUNT(*) FROM spr_inquiry")
     int countAll();
 
+    @Select("SELECT COUNT(*) FROM spr_inquiry WHERE status = 0")
+    int countUnanswered();
+
     @Select("SELECT * FROM spr_inquiry WHERE inquiry_id = #{inquiryId}")
     Optional<Inquiry> findByInquiryId(Long inquiryId);
 

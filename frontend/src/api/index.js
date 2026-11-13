@@ -47,6 +47,8 @@ export const authApi = {
 // Event API
 export const eventApi = {
   getEvents: (page = 1, size = 9) => api.get(`/events?page=${page}&size=${size}`),
+  getAdminEvents: (page = 1, size = 20) =>
+    api.get(`/events/admin?page=${page}&size=${size}`),
   getEvent: (id) => api.get(`/events/${id}`),
   createEvent: (data) => api.post('/events', data),
   updateEvent: (id, data) => api.put(`/events/${id}`, data),
@@ -63,6 +65,8 @@ export const projectApi = {
   // 관리자 전체 프로젝트 조회
   getAdminProjects: (page = 1, size = 20) =>
     api.get(`/projects/admin?page=${page}&size=${size}`),
+
+  getAdminProject: (id) => api.get(`/projects/admin/${id}`),
 
   getProject: (id) => api.get(`/projects/${id}`),
 
@@ -122,6 +126,9 @@ export const lanternApi = {
 export const magazineApi = {
   getMagazines: (page = 1, size = 9, category = '') =>
     api.get(`/magazines?page=${page}&size=${size}${category ? `&category=${category}` : ''}`),
+  getAdminMagazines: (page = 1, size = 20) =>
+    api.get(`/magazines/admin?page=${page}&size=${size}`),
+  getAdminMagazine: (id) => api.get(`/magazines/admin/${id}`),
   getMagazine: (id) => api.get(`/magazines/${id}`),
   createMagazine: (data) => api.post('/magazines', data),
   updateMagazine: (id, data) => api.put(`/magazines/${id}`, data),
@@ -132,6 +139,8 @@ export const magazineApi = {
 export const adminApi = {
   getUsers: (page = 1, size = 10) => api.get(`/admin/users?page=${page}&size=${size}`),
   getUser: (id) => api.get(`/admin/users/${id}`),
+  createUser: (data) => api.post('/admin/users', data),
+  updateUser: (id, data) => api.put(`/admin/users/${id}`, data),
   updateUserStatus: (id, status) => api.patch(`/admin/users/${id}/status`, { status }),
   deleteUser: (id) => api.delete(`/admin/users/${id}`),
   getStats: () => api.get('/admin/stats'),

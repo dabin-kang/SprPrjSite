@@ -1,8 +1,14 @@
 package com.sprevn.controller;
 
 import com.sprevn.dto.ApiResponse;
+import com.sprevn.dto.AdminUserUpdateRequest;
+import com.sprevn.dto.SignupRequest;
 import com.sprevn.entity.User;
+import com.sprevn.service.EventService;
+import com.sprevn.service.InquiryService;
+import com.sprevn.service.ProjectService;
 import com.sprevn.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +24,9 @@ import java.util.Map;
 public class AdminController {
 
     private final UserService userService;
+    private final EventService eventService;
+    private final ProjectService projectService;
+    private final InquiryService inquiryService;
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getAllUsers(
@@ -40,6 +49,21 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success(user));
     }
 
+    @PostMapping("/users")
+    public ResponseEntity<ApiResponse<Void>> createUser(
+            @Valid @RequestBody SignupRequest request) {
+        userService.signup(request);
+        return ResponseEntity.ok(ApiResponse.success("회원이 등록되었습니다", null));
+    }
+
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<Void>> updateUser(
+            @PathVariable Long userId,
+            @Valid @RequestBody AdminUserUpdateRequest request) {
+        userService.updateUser(userId, request);
+        return ResponseEntity.ok(ApiResponse.success("회원 정보가 수정되었습니다", null));
+    }
+
     @PatchMapping("/users/{userId}/status")
     public ResponseEntity<ApiResponse<Void>> updateUserStatus(
             @PathVariable Long userId,
@@ -57,7 +81,10 @@ public class AdminController {
     @GetMapping("/stats")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getStats() {
         return ResponseEntity.ok(ApiResponse.success(Map.of(
-                "totalUsers", userService.getTotalUserCount()
+                "totalUsers", userService.getTotalUserCount(),
+                "totalEvents", eventService.getTotalCount(),
+                "totalProjects", projectService.getTotalCount(),
+                "unansweredInquiries", inquiryService.getUnansweredCount()
         )));
     }
 }

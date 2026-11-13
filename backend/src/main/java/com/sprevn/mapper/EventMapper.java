@@ -15,6 +15,9 @@ public interface EventMapper {
     @Select("SELECT COUNT(*) FROM spr_event")
     int countAll();
 
+    @Select("SELECT COUNT(*) FROM spr_event WHERE status = 1")
+    int countActive();
+
     @Select("SELECT * FROM spr_event WHERE event_id = #{eventId}")
     Optional<Event> findByEventId(Long eventId);
 
@@ -23,7 +26,7 @@ public interface EventMapper {
 
     @Insert("""
         INSERT INTO spr_event (title, content, image_url, start_date, end_date, status, created_by, created_at)
-        VALUES (#{title}, #{content}, #{imageUrl}, #{startDate}, #{endDate}, 1, #{createdBy}, NOW())
+        VALUES (#{title}, #{content}, #{imageUrl}, #{startDate}, #{endDate}, #{status}, #{createdBy}, NOW())
     """)
     @Options(useGeneratedKeys = true, keyProperty = "eventId")
     int insert(Event event);

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -35,4 +36,5 @@ public class Project {
     private String category;
     private LocalDateTime publishedAt;
     private Integer sortOrder;
+    private List<ProjectSection> sections;
 }

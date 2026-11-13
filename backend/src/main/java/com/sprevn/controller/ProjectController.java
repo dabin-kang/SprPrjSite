@@ -54,6 +54,14 @@ public class ProjectController {
         )));
     }
 
+    @GetMapping("/admin/{projectId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Project>> getAdminProject(
+            @PathVariable Long projectId) {
+        return ResponseEntity.ok(ApiResponse.success(
+                projectService.getProject(projectId)));
+    }
+
     // 공개 프로젝트 상세 조회
     @GetMapping("/{projectId}")
     public ResponseEntity<ApiResponse<Project>> getProject(

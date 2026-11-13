@@ -192,3 +192,145 @@
   .stats-cards { grid-template-columns: repeat(2, 1fr); }
   .admin-body { padding: 16px; }
 }
+
+.admin-panel-header,
+.admin-section-heading,
+.admin-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-panel-header {
+  margin-bottom: 18px;
+}
+
+.admin-panel-header h2,
+.admin-section-heading h4 {
+  margin: 0;
+}
+
+.admin-panel-header p {
+  margin: 4px 0 0;
+  color: var(--text-gray);
+}
+
+.admin-editor {
+  margin-bottom: 24px;
+}
+
+.admin-editor h3 {
+  margin: 0 0 18px;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0 16px;
+}
+
+.admin-form-actions {
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.admin-section-heading {
+  margin: 18px 0 10px;
+}
+
+.admin-section-editor {
+  min-width: 0;
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.admin-section-editor legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
+
+.admin-image-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.admin-empty {
+  padding: 36px 16px;
+  color: var(--text-gray);
+  text-align: center;
+  background: white;
+  border-radius: var(--radius);
+}
+
+.admin-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.admin-page .btn-danger {
+  color: #fff;
+  background: #c62828;
+  border: 1px solid #c62828;
+}
+
+.admin-page .btn-danger:hover {
+  background: #a61f1f;
+  border-color: #a61f1f;
+}
+
+.admin-page .modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.admin-page .modal-content {
+  position: relative;
+  width: 100%;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.admin-page .modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text-gray);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.admin-inquiry-modal {
+  max-width: 720px;
+  max-height: 90vh;
+  overflow: auto;
+  padding: 28px;
+}
+
+@media (max-width: 768px) {
+  .admin-image-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-panel-header {
+    align-items: flex-start;
+  }
+}

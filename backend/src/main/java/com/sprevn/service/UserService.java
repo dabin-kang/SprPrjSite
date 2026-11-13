@@ -7,12 +7,14 @@ import com.sprevn.dto.SignupRequest;
 import com.sprevn.entity.User;
 import com.sprevn.mapper.UserMapper;
 import com.sprevn.util.JwtUtil;
+import org.springframework.dao.DataIntegrityViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -105,8 +107,15 @@ public class UserService {
 
     // 전체 사용자 조회
     public List<User> getAllUsers(int page, int size) {
+        validatePage(page, size);
         int offset = (page - 1) * size;
         return userMapper.findAll(offset, size);
+    }
+
+    private void validatePage(int page, int size) {
+        if (page < 1 || size < 1 || size > 100) {
+            throw new IllegalArgumentException("페이지는 1 이상, 페이지 크기는 1~100이어야 합니다.");
+        }
     }
 
     // 전체 사용자 수
@@ -124,8 +133,56 @@ public class UserService {
 
     // 사용자 상태 변경
     public void updateUserStatus(Long userId, Integer status) {
-        getUserById(userId);
+        User user = getUserById(userId);
+        if (status == null || (status != 0 && status != 1 && status != 2)) {
+            throw new IllegalArgumentException("회원 상태는 0, 1, 2 중 하나여야 합니다.");
+        }
+        if ("admin".equalsIgnoreCase(user.getId()) && status != 1) {
+            throw new IllegalArgumentException("관리자 계정은 비활성화하거나 정지할 수 없습니다.");
+        }
         userMapper.updateStatus(userId, status);
+    }
+
+    public void updateUser(Long userId, com.sprevn.dto.AdminUserUpdateRequest request) {
+        User user = getUserById(userId);
+        if (request.getPname() != null) {
+            if (request.getPname().isBlank()) {
+                throw new IllegalArgumentException("이름을 입력해 주세요.");
+            }
+            user.setPname(request.getPname().trim());
+        }
+        if (request.getEmail() != null) {
+            if (request.getEmail().isBlank()) {
+                throw new IllegalArgumentException("이메일을 입력해 주세요.");
+            }
+            String email = request.getEmail().trim();
+            if (userMapper.existsByEmailForOtherUser(email, userId) > 0) {
+                throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            }
+            user.setEmail(email);
+        }
+        if (request.getGender() != null) {
+            user.setGender(request.getGender().isBlank() ? null : request.getGender());
+        }
+        if (request.getPhoneNumber() != null) {
+            user.setPhoneNumber(request.getPhoneNumber().isBlank() ? null : request.getPhoneNumber());
+        }
+        if (request.getBirthday() != null) {
+            try {
+                user.setBirthday(request.getBirthday().isBlank()
+                        ? null
+                        : LocalDate.parse(request.getBirthday()));
+            } catch (DateTimeParseException e) {
+                throw new IllegalArgumentException("생년월일은 YYYY-MM-DD 형식이어야 합니다.");
+            }
+        }
+        if (request.getAddress() != null) {
+            user.setAddress(request.getAddress().isBlank() ? null : request.getAddress().trim());
+        }
+        userMapper.update(user);
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            userMapper.updatePassword(userId, passwordEncoder.encode(request.getPassword()));
+        }
     }
 
     // 비밀번호 변경
@@ -138,8 +195,16 @@ public class UserService {
 
     // 사용자 삭제
     public void deleteUser(Long userId) {
-        getUserById(userId);
-        userMapper.delete(userId);
+        User user = getUserById(userId);
+        if ("admin".equalsIgnoreCase(user.getId())) {
+            throw new IllegalArgumentException("관리자 계정은 삭제할 수 없습니다.");
+        }
+        try {
+            userMapper.delete(userId);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(
+                    "콘텐츠나 문의에 연결된 회원은 삭제할 수 없습니다. 상태를 비활성화해 주세요.");
+        }
     }
 
     // 아이디 중복 확인

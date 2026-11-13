@@ -12,6 +12,7 @@ import ChangwonBiennale from './data/ChangwonBiennale';
 import BulmosanGoods from './data/BulmosanGoods.js';
 
 import { useSignedUrls } from '../../hooks/useSignedUrl.js';
+import { projectApi } from '../../api';
 
 
 const projects = [
@@ -23,10 +24,50 @@ const projects = [
 function ProjectDetailPage() {
   const { projectId } = useParams();
 
-  const project = projects.find(
+  const staticProject = projects.find(
     (item) => item.id === projectId
   );
 
+  const [databaseProject, setDatabaseProject] = useState(null);
+  const [loadingProject, setLoadingProject] = useState(false);
+  const [projectLoadError, setProjectLoadError] = useState('');
+
+  useEffect(() => {
+    if (staticProject || !/^\d+$/.test(projectId || '')) {
+      setDatabaseProject(null);
+      setLoadingProject(false);
+      setProjectLoadError('');
+      return undefined;
+    }
+
+    let active = true;
+    setLoadingProject(true);
+    setProjectLoadError('');
+    projectApi.getProject(projectId)
+      .then((response) => {
+        if (active) setDatabaseProject(response?.data || null);
+      })
+      .catch((error) => {
+        if (active) {
+          setDatabaseProject(null);
+          setProjectLoadError(
+            typeof error === 'string'
+              ? error
+              : error?.message || '프로젝트를 불러오지 못했습니다.'
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setLoadingProject(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [projectId, staticProject]);
+
+  const project = staticProject || databaseProject;
+  const isCmsProject = Boolean(project?.projectId);
   const isBulmosan =
     project?.id === 'bulmosan-goods';
 
@@ -52,10 +93,19 @@ function ProjectDetailPage() {
         .filter(Boolean) || []
     ) || [];
 
+  const contentImagePaths =
+    project?.sections?.flatMap((section) =>
+      section.images?.map((image) => image.imageUrl).filter(Boolean) || []
+    ) || [];
+
+  const mainImagePath = project?.imageUrl || '';
+  const isExternalImage = (path) => /^https?:\/\//i.test(path || '');
   const imagePaths = [
     ...new Set([
       ...sliderPaths,
       ...productPaths,
+      ...contentImagePaths,
+      ...(mainImagePath && !isExternalImage(mainImagePath) ? [mainImagePath] : []),
     ]),
   ];
 
@@ -85,6 +135,11 @@ function ProjectDetailPage() {
       return map;
     }, {});
 
+  const resolveImage = (path) => {
+    if (!path) return null;
+    if (isExternalImage(path) || path.startsWith('/')) return path;
+    return signedUrlMap[path] || null;
+  };
 
   /*
    * ======================================================
@@ -94,15 +149,16 @@ function ProjectDetailPage() {
 
   const supabaseImages =
     sliderPaths
-      .map((path) => signedUrlMap[path])
+      .map(resolveImage)
       .filter(Boolean);
-
 
   const images = isBulmosan
     ? supabaseImages
     : project?.image
       ? [project.image]
-      : [];
+      : mainImagePath
+        ? [resolveImage(mainImagePath)].filter(Boolean)
+        : [];
 
 
   /*
@@ -303,11 +359,23 @@ function ProjectDetailPage() {
    */
 
   if (!project) {
+    if (loadingProject) {
+      return (
+        <main className="project-detail-page">
+          <p>프로젝트를 불러오는 중입니다.</p>
+        </main>
+      );
+    }
+
     return (
       <main className="project-detail-page">
 
+        {projectLoadError && (
+          <p role="alert">{projectLoadError}</p>
+        )}
+
         <h1>
-          프로젝트를 찾을 수 없습니다.
+          {projectLoadError ? '프로젝트를 불러오지 못했습니다.' : '프로젝트를 찾을 수 없습니다.'}
         </h1>
 
         <Link to="/projects">
@@ -329,7 +397,7 @@ function ProjectDetailPage() {
       <section className="project-detail-header">
 
         <p className="page-label">
-          PROJECT {project.number}
+          PROJECT {project.number || project.projectId}
         </p>
 
         <h1>
@@ -521,7 +589,9 @@ function ProjectDetailPage() {
           ) : (
 
             <div className="project-detail-image-loading">
-              이미지를 불러오는 중입니다.
+              {isCmsProject && !mainImagePath
+                ? '대표 이미지가 등록되지 않았습니다.'
+                : '이미지를 불러오는 중입니다.'}
             </div>
 
           )}
@@ -563,26 +633,22 @@ function ProjectDetailPage() {
           CONTENT
       ================================================== */}
 
-      <section className="project-detail-content">
-
-        <p>
-          {project.content}
-        </p>
-
-      </section>
+      {project.content && (
+        <section className="project-detail-content">
+          <p>{project.content}</p>
+        </section>
+      )}
 
 
       {/* ==================================================
           INTRO
       ================================================== */}
 
-      <section className="project-detail-intro">
-
-        <p>
-          {project.intro}
-        </p>
-
-      </section>
+      {project.intro && (
+        <section className="project-detail-intro">
+          <p>{project.intro}</p>
+        </section>
+      )}
 
 
       {/* ==================================================
@@ -593,6 +659,7 @@ function ProjectDetailPage() {
         (section, index) => {
 
           const hasProducts =
+            !isCmsProject &&
             section.products &&
             section.products.length > 0;
 
@@ -604,7 +671,7 @@ function ProjectDetailPage() {
                   ? 'project-products-section'
                   : 'project-content-section'
               }
-              key={index}
+              key={section.sectionId || index}
             >
 
               {/* 섹션 제목 */}
@@ -621,9 +688,9 @@ function ProjectDetailPage() {
                   {section.title}
                 </h2>
 
-                {section.text && (
+                {(section.text || section.content) && (
                   <p>
-                    {section.text}
+                    {section.text || section.content}
                   </p>
                 )}
 
@@ -710,6 +777,15 @@ function ProjectDetailPage() {
 
                 </div>
 
+              ) : isCmsProject ? (
+                section.images?.map((image) => {
+                  const imageUrl = resolveImage(image.imageUrl);
+                  return imageUrl ? (
+                    <div className="project-content-image" key={image.imageId}>
+                      <img src={imageUrl} alt={image.imageAlt || section.title} />
+                    </div>
+                  ) : null;
+                })
               ) : (
 
                 section.image && (

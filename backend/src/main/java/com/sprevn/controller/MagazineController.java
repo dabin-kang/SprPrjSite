@@ -27,13 +27,35 @@ public class MagazineController {
         if (category != null && !category.isBlank()) {
             magazines = magazineService.getMagazinesByCategory(category, page, size);
         } else {
-            magazines = magazineService.getAllMagazines(page, size);
+                magazines = magazineService.getPublishedMagazines(page, size);
         }
         return ResponseEntity.ok(ApiResponse.success(Map.of(
                 "magazines", magazines,
-                "total", magazineService.getTotalCount(),
+                    "total", category == null || category.isBlank()
+                            ? magazineService.getPublishedCount()
+                            : magazineService.getPublishedCountByCategory(category),
                 "page", page,
                 "size", size)));
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getAdminMagazines(
+                @RequestParam(defaultValue = "1") int page,
+                @RequestParam(defaultValue = "20") int size) {
+            return ResponseEntity.ok(ApiResponse.success(Map.of(
+                    "magazines", magazineService.getAllMagazines(page, size),
+                    "total", magazineService.getTotalCount(),
+                    "page", page,
+                    "size", size)));
+    }
+
+    @GetMapping("/admin/{magazineId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Magazine>> getAdminMagazine(
+                @PathVariable Long magazineId) {
+            return ResponseEntity.ok(ApiResponse.success(
+                    magazineService.getAdminMagazine(magazineId)));
     }
 
     @GetMapping("/{magazineId}")

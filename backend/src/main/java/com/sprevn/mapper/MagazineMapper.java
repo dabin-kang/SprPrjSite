@@ -15,15 +15,24 @@ public interface MagazineMapper {
     @Select("SELECT COUNT(*) FROM spr_magazine")
     int countAll();
 
+    @Select("SELECT COUNT(*) FROM spr_magazine WHERE status = 1")
+    int countPublished();
+
+    @Select("SELECT COUNT(*) FROM spr_magazine WHERE status = 1 AND category = #{category}")
+    int countPublishedByCategory(@Param("category") String category);
+
     @Select("SELECT * FROM spr_magazine WHERE magazine_id = #{magazineId}")
     Optional<Magazine> findByMagazineId(Long magazineId);
+
+    @Select("SELECT * FROM spr_magazine WHERE status = 1 ORDER BY created_at DESC LIMIT #{size} OFFSET #{offset}")
+    List<Magazine> findPublished(@Param("offset") int offset, @Param("size") int size);
 
     @Select("SELECT * FROM spr_magazine WHERE status = 1 AND category = #{category} ORDER BY created_at DESC LIMIT #{size} OFFSET #{offset}")
     List<Magazine> findByCategory(@Param("category") String category, @Param("offset") int offset, @Param("size") int size);
 
     @Insert("""
         INSERT INTO spr_magazine (title, content, category, thumbnail, view_count, status, created_by, created_at)
-        VALUES (#{title}, #{content}, #{category}, #{thumbnail}, 0, 1, #{createdBy}, NOW())
+        VALUES (#{title}, #{content}, #{category}, #{thumbnail}, 0, #{status}, #{createdBy}, NOW())
     """)
     @Options(useGeneratedKeys = true, keyProperty = "magazineId")
     int insert(Magazine magazine);

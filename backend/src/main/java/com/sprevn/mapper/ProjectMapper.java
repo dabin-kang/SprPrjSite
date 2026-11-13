@@ -37,6 +37,34 @@ public interface ProjectMapper {
     """)
     int countActive();
 
+    @Select("SELECT COUNT(*) FROM spr_project WHERE slug = #{slug}")
+    int countBySlug(@Param("slug") String slug);
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM spr_project
+        WHERE slug = #{slug}
+          AND project_id <> #{projectId}
+    """)
+    int countBySlugExcludingProject(
+        @Param("slug") String slug,
+        @Param("projectId") Long projectId
+    );
+
+    @Select("SELECT COUNT(*) FROM spr_project WHERE project_no = #{projectNo}")
+    int countByProjectNo(@Param("projectNo") Integer projectNo);
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM spr_project
+        WHERE project_no = #{projectNo}
+          AND project_id <> #{projectId}
+    """)
+    int countByProjectNoExcludingProject(
+        @Param("projectNo") Integer projectNo,
+        @Param("projectId") Long projectId
+    );
+
     // 프로젝트 ID로 상세 조회
     @Select("""
         SELECT *

@@ -13,13 +13,23 @@ public class InquiryService {
 
     private final InquiryMapper inquiryMapper;
 
+    private int getOffset(int page, int size) {
+        if (page < 1 || size < 1 || size > 100) {
+            throw new IllegalArgumentException("페이지는 1 이상, 페이지 크기는 1~100이어야 합니다.");
+        }
+        return (page - 1) * size;
+    }
+
     public List<Inquiry> getAllInquiries(int page, int size) {
-        int offset = (page - 1) * size;
-        return inquiryMapper.findAll(offset, size);
+        return inquiryMapper.findAll(getOffset(page, size), size);
     }
 
     public int getTotalCount() {
         return inquiryMapper.countAll();
+    }
+
+    public int getUnansweredCount() {
+        return inquiryMapper.countUnanswered();
     }
 
     public Inquiry getInquiry(Long inquiryId) {
@@ -32,12 +42,21 @@ public class InquiryService {
     }
 
     public void createInquiry(Inquiry inquiry) {
+        if (inquiry.getName() == null || inquiry.getName().isBlank()
+                || inquiry.getEmail() == null || inquiry.getEmail().isBlank()
+                || inquiry.getTitle() == null || inquiry.getTitle().isBlank()
+                || inquiry.getContent() == null || inquiry.getContent().isBlank()) {
+            throw new IllegalArgumentException("이름, 이메일, 제목, 문의 내용을 입력해 주세요.");
+        }
         inquiryMapper.insert(inquiry);
     }
 
     public void answerInquiry(Long inquiryId, String answer) {
         getInquiry(inquiryId);
-        inquiryMapper.answer(inquiryId, answer);
+        if (answer == null || answer.isBlank()) {
+            throw new IllegalArgumentException("답변 내용을 입력해 주세요.");
+        }
+        inquiryMapper.answer(inquiryId, answer.trim());
     }
 
     public void deleteInquiry(Long inquiryId) {
