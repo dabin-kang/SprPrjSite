@@ -13,6 +13,7 @@ import BulmosanGoods from './data/BulmosanGoods.js';
 
 import { useSignedUrls } from '../../hooks/useSignedUrl.js';
 import { projectApi } from '../../api';
+import { sanitizeRichContent } from '../../utils/sanitizeRichContent';
 
 
 const projects = [
@@ -689,9 +690,16 @@ function ProjectDetailPage() {
                 </h2>
 
                 {(section.text || section.content) && (
-                  <p>
-                    {section.text || section.content}
-                  </p>
+                  isCmsProject ? (
+                    <div
+                      className="project-rich-content"
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeRichContent(section.content || ''),
+                      }}
+                    />
+                  ) : (
+                    <p>{section.text || section.content}</p>
+                  )
                 )}
 
               </div>

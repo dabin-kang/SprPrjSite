@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { magazineApi } from '../../api';
 import { useAuth } from '../../hooks/useAuth';
-import { sanitizeMagazineContent } from '../../utils/sanitizeMagazineContent';
+import { sanitizeRichContent } from '../../utils/sanitizeRichContent';
 import './MagazineDetailPage.css';
 
 function getErrorMessage(error, fallback) {
@@ -109,7 +109,7 @@ function MagazineDetailPage() {
                 {magazine.content ? (
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: sanitizeMagazineContent(magazine.content),
+                      __html: sanitizeRichContent(magazine.content),
                     }}
                   />
                 ) : (

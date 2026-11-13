@@ -5,10 +5,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { sanitizeMagazineContent } from '../../utils/sanitizeMagazineContent';
-import './MagazineContentEditor.css';
+import { sanitizeRichContent } from '../../utils/sanitizeRichContent';
+import './RichContentEditor.css';
 
 const FONT_SIZES = ['12px', '14px', '16px', '18px', '24px', '32px'];
+const LINE_HEIGHTS = ['1', '1.2', '1.5', '1.8', '2'];
 const LETTER_SPACINGS = [
   { value: 'normal', label: '기본' },
   { value: '-1px', label: '-1px' },
@@ -34,23 +35,32 @@ function selectedTextNodes(editor, range) {
   return textNodes;
 }
 
-function MagazineContentEditor({ initialContent, disabled = false }, ref) {
+function RichContentEditor({
+  initialContent,
+  disabled = false,
+  onUploadImage,
+}, ref) {
   const editorRef = useRef(null);
+  const imageInputRef = useRef(null);
   const selectionRef = useRef(null);
   const [message, setMessage] = useState('');
   const [fontSize, setFontSize] = useState('');
+  const [letterSpacing, setLetterSpacing] = useState('');
+  const [lineHeight, setLineHeight] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useImperativeHandle(ref, () => ({
     getContent: () => {
       const editor = editorRef.current;
-      if (!editor || !editor.textContent?.replace(/\u00a0/g, ' ').trim()) return '';
-      return sanitizeMagazineContent(editor.innerHTML);
+      const hasText = editor?.textContent?.replace(/\u00a0/g, ' ').trim();
+      if (!editor || (!hasText && !editor.querySelector('img'))) return '';
+      return sanitizeRichContent(editor.innerHTML);
     },
   }), []);
 
   useEffect(() => {
     if (editorRef.current) {
-      editorRef.current.innerHTML = sanitizeMagazineContent(initialContent || '');
+      editorRef.current.innerHTML = sanitizeRichContent(initialContent || '');
     }
   }, [initialContent]);
 
@@ -122,6 +132,65 @@ function MagazineContentEditor({ initialContent, disabled = false }, ref) {
     applyStyle('fontWeight', weight >= 600 ? '400' : '700');
   };
 
+  const insertImage = (source, alt) => {
+    const editor = editorRef.current;
+    let range = getSavedRange();
+    if (!range) {
+      range = document.createRange();
+      range.selectNodeContents(editor);
+      range.collapse(false);
+    } else {
+      range.collapse(false);
+    }
+
+    const image = document.createElement('img');
+    image.src = source;
+    image.alt = alt;
+    range.insertNode(image);
+
+    const lineBreak = document.createElement('br');
+    image.parentNode.insertBefore(lineBreak, image.nextSibling);
+    const updatedRange = document.createRange();
+    updatedRange.setStartAfter(lineBreak);
+    updatedRange.collapse(true);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(updatedRange);
+    selectionRef.current = updatedRange.cloneRange();
+    editor.focus();
+  };
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setMessage('JPG, PNG, WEBP 이미지 파일만 추가할 수 있습니다.');
+      event.target.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage('이미지는 5MB 이하만 추가할 수 있습니다.');
+      event.target.value = '';
+      return;
+    }
+
+    setUploadingImage(true);
+    setMessage('');
+    try {
+      const source = await onUploadImage(file);
+      if (!source || (!/^https:\/\//i.test(source) && !/^\/(?!\/)/.test(source))) {
+        throw new Error('이미지 주소를 확인할 수 없습니다.');
+      }
+      insertImage(source, file.name);
+    } catch (error) {
+      setMessage(typeof error === 'string' ? error : error?.message || '이미지를 추가하지 못했습니다.');
+    } finally {
+      setUploadingImage(false);
+      event.target.value = '';
+    }
+  };
+
   const handlePaste = (event) => {
     event.preventDefault();
     const selection = window.getSelection();
@@ -139,11 +208,11 @@ function MagazineContentEditor({ initialContent, disabled = false }, ref) {
   };
 
   return (
-    <div className="magazine-content-editor">
-      <div className="magazine-editor-toolbar" aria-label="본문 서식 도구">
+    <div className="rich-content-editor">
+      <div className="rich-editor-toolbar" aria-label="본문 서식 도구">
         <button
           type="button"
-          className="magazine-editor-bold"
+          className="rich-editor-bold"
           aria-label="굵게"
           title="선택한 글자 굵게"
           disabled={disabled}
@@ -160,7 +229,7 @@ function MagazineContentEditor({ initialContent, disabled = false }, ref) {
             disabled={disabled}
             onChange={(event) => {
               const nextSize = event.target.value;
-              setFontSize(nextSize);
+              setFontSize('');
               applyStyle('fontSize', nextSize);
             }}
           >
@@ -172,23 +241,64 @@ function MagazineContentEditor({ initialContent, disabled = false }, ref) {
           글자 자간
           <select
             aria-label="글자 자간"
-            defaultValue="normal"
+            value={letterSpacing}
             disabled={disabled}
-            onChange={(event) => applyStyle('letterSpacing', event.target.value)}
+            onChange={(event) => {
+              const nextSpacing = event.target.value;
+              setLetterSpacing('');
+              applyStyle('letterSpacing', nextSpacing);
+            }}
           >
+            <option value="">자간 선택</option>
             {LETTER_SPACINGS.map((spacing) => (
               <option key={spacing.value} value={spacing.value}>{spacing.label}</option>
             ))}
           </select>
         </label>
-        <span className="magazine-editor-help">적용할 글자를 드래그한 뒤 서식을 선택하세요.</span>
+        <label>
+          줄 간격
+          <select
+            aria-label="줄 간격"
+            value={lineHeight}
+            disabled={disabled}
+            onChange={(event) => {
+              const nextLineHeight = event.target.value;
+              setLineHeight('');
+              applyStyle('lineHeight', nextLineHeight);
+            }}
+          >
+            <option value="">줄 간격 선택</option>
+            {LINE_HEIGHTS.map((height) => (
+              <option key={height} value={height}>{height}</option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="button"
+          className="rich-editor-image"
+          disabled={disabled || uploadingImage || !onUploadImage}
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => imageInputRef.current?.click()}
+        >
+          {uploadingImage ? '업로드 중...' : '이미지'}
+        </button>
+        <input
+          ref={imageInputRef}
+          className="rich-editor-file-input"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          disabled={disabled || uploadingImage || !onUploadImage}
+          aria-label="본문 이미지 업로드"
+          onChange={handleImageChange}
+        />
+        <span className="rich-editor-help">텍스트를 선택해 서식을 적용하거나, 이미지 버튼으로 업로드하세요.</span>
       </div>
       <div
         ref={editorRef}
-        className="magazine-editor-surface"
+        className="rich-editor-surface"
         contentEditable={!disabled}
         role="textbox"
-        aria-label="매거진 본문"
+        aria-label="본문 편집기"
         aria-multiline="true"
         suppressContentEditableWarning
         onKeyUp={saveSelection}
@@ -196,9 +306,9 @@ function MagazineContentEditor({ initialContent, disabled = false }, ref) {
         onInput={() => setMessage('')}
         onPaste={handlePaste}
       />
-      {message && <p className="magazine-editor-message" role="status">{message}</p>}
+      {message && <p className="rich-editor-message" role="status">{message}</p>}
     </div>
   );
 }
 
-export default forwardRef(MagazineContentEditor);
+export default forwardRef(RichContentEditor);

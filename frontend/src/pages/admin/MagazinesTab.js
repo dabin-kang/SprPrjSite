@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { magazineApi } from '../../api';
+import { magazineApi, projectApi } from '../../api';
+import { getPublicStorageUrl } from '../../hooks/useSignedUrl';
 import { Field, FormError, getErrorMessage, ListState, Pagination, useAdminList } from './CmsShared';
-import MagazineContentEditor from './MagazineContentEditor';
+import RichContentEditor from './RichContentEditor';
 
 const EMPTY_MAGAZINE = {
   title: '',
@@ -22,6 +23,7 @@ function MagazinesTab() {
   const [editingId, setEditingId] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [formError, setFormError] = useState('');
 
   const openCreate = () => {
@@ -46,6 +48,7 @@ function MagazinesTab() {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    if (saving || uploadingImage) return;
     setSaving(true);
     setFormError('');
     const payload = {
@@ -75,6 +78,19 @@ function MagazinesTab() {
       setFormError(getErrorMessage(error, '매거진을 저장하지 못했습니다.'));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const uploadContentImage = async (file) => {
+    setUploadingImage(true);
+    try {
+      const response = await projectApi.uploadProjectImage(file, 'magazine-content');
+      if (!response?.imageUrl) throw new Error('이미지 업로드 결과를 확인할 수 없습니다.');
+      const publicUrl = getPublicStorageUrl(response.imageUrl);
+      if (!publicUrl) throw new Error('업로드된 이미지 주소를 확인할 수 없습니다.');
+      return publicUrl;
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -148,19 +164,20 @@ function MagazinesTab() {
               />
             </Field>
             <Field label="내용">
-              <MagazineContentEditor
+              <RichContentEditor
                 ref={contentEditorRef}
                 initialContent={form.content}
-                disabled={saving}
+                disabled={saving || uploadingImage}
+                onUploadImage={uploadContentImage}
               />
             </Field>
             <FormError>{formError}</FormError>
             <div className="admin-form-actions">
-              <button type="button" className="btn btn-secondary" onClick={() => setFormOpen(false)} disabled={saving}>
+              <button type="button" className="btn btn-secondary" onClick={() => setFormOpen(false)} disabled={saving || uploadingImage}>
                 취소
               </button>
-              <button type="submit" className="btn btn-primary" disabled={saving}>
-                {saving ? '저장 중...' : '저장'}
+              <button type="submit" className="btn btn-primary" disabled={saving || uploadingImage}>
+                {uploadingImage ? '이미지 업로드 중...' : saving ? '저장 중...' : '저장'}
               </button>
             </div>
           </div>

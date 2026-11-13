@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { projectApi } from '../../api';
+import { getPublicStorageUrl } from '../../hooks/useSignedUrl';
 import { Field, FormError, getErrorMessage, ListState, Pagination, useAdminList } from './CmsShared';
+import RichContentEditor from './RichContentEditor';
 
 const emptySection = () => ({
   title: '',
@@ -25,6 +27,7 @@ const emptyProject = () => ({
 });
 
 function ProjectsTab() {
+  const sectionEditorRefs = useRef(new Map());
   const list = useAdminList(projectApi.getAdminProjects, 'projects');
   const [form, setForm] = useState(emptyProject);
   const [editingId, setEditingId] = useState(null);
@@ -100,6 +103,23 @@ function ProjectsTab() {
     }
   };
 
+  const uploadInlineImage = async (file) => {
+    if (!form.slug.trim()) {
+      throw new Error('본문 이미지를 올리기 전에 프로젝트 URL 식별자를 입력해 주세요.');
+    }
+
+    setUploading(true);
+    try {
+      const response = await projectApi.uploadProjectImage(file, form.slug.trim());
+      if (!response?.imageUrl) throw new Error('이미지 업로드 결과를 확인할 수 없습니다.');
+      const publicUrl = getPublicStorageUrl(response.imageUrl);
+      if (!publicUrl) throw new Error('업로드된 이미지 주소를 확인할 수 없습니다.');
+      return publicUrl;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (saving || uploading) return;
@@ -119,7 +139,7 @@ function ProjectsTab() {
       sections: form.sections.map((section, index) => ({
         ...section,
         title: section.title.trim(),
-        content: section.content.trim(),
+        content: sectionEditorRefs.current.get(index)?.getContent().trim() ?? section.content.trim(),
         sortOrder: Number(section.sortOrder ?? index),
         images: section.images.map((image, imageIndex) => ({
           ...image,
@@ -260,7 +280,15 @@ function ProjectsTab() {
                   </Field>
                 </div>
                 <Field label="본문">
-                  <textarea className="form-control" rows={5} value={section.content} onChange={(e) => updateSection(sectionIndex, { content: e.target.value })} />
+                  <RichContentEditor
+                    ref={(editor) => {
+                      if (editor) sectionEditorRefs.current.set(sectionIndex, editor);
+                      else sectionEditorRefs.current.delete(sectionIndex);
+                    }}
+                    initialContent={section.content}
+                    disabled={saving || uploading}
+                    onUploadImage={uploadInlineImage}
+                  />
                 </Field>
                 <div className="admin-section-heading">
                   <strong>섹션 이미지</strong>

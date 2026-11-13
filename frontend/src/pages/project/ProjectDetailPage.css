@@ -311,6 +311,26 @@
   color: var(--text-gray);
 
   line-height: 1.8;
+}
+
+.project-rich-content {
+  color: var(--text-gray);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.project-rich-content p,
+.project-rich-content div {
+  margin: 0 0 0.9em;
+}
+
+.project-rich-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 18px 0;
+  border-radius: 8px;
 
   white-space: pre-line;
 }

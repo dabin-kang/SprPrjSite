@@ -145,6 +145,14 @@
   margin: 0 0 0.9em;
 }
 
+.magazine-article-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 18px auto;
+  border-radius: 8px;
+}
+
 .magazine-article-body h2,
 .magazine-article-body h3,
 .magazine-article-body h4 {

@@ -2,6 +2,15 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../libs/supabaseClient';
 
+export const getPublicStorageUrl = (path) => {
+  if (!path) return null;
+  const { data } = supabase
+    .storage
+    .from('spr_sg')
+    .getPublicUrl(path);
+  return data?.publicUrl || null;
+};
+
 /**
  * Supabase Storage 파일 경로를 공개 이미지 URL로 변환
  *
@@ -23,14 +32,9 @@ export const useSignedUrls = (paths = []) => {
       const result = paths
         .filter(Boolean)
         .map((path) => {
-          const { data } = supabase
-            .storage
-            .from('spr_sg')
-            .getPublicUrl(path);
-
           return {
             path,
-            signedUrl: data?.publicUrl || null,
+            signedUrl: getPublicStorageUrl(path),
           };
         });
 

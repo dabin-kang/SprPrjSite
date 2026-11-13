@@ -1,6 +1,6 @@
 const ALLOWED_TAGS = new Set([
   'p', 'div', 'br', 'span', 'strong', 'b', 'em', 'i', 'u',
-  'h2', 'h3', 'h4', 'blockquote', 'ul', 'ol', 'li',
+  'h2', 'h3', 'h4', 'blockquote', 'ul', 'ol', 'li', 'img',
 ]);
 
 const BLOCKED_TAGS = new Set([
@@ -13,6 +13,7 @@ function getAllowedStyle(element) {
   const fontSize = element.style.fontSize.trim().toLowerCase();
   const fontWeight = element.style.fontWeight.trim().toLowerCase();
   const letterSpacing = element.style.letterSpacing.trim().toLowerCase();
+  const lineHeight = element.style.lineHeight.trim().toLowerCase();
 
   if (/^(?:8|9|[1-4]\d|5[0-6])px$/.test(fontSize)) {
     styles.push(`font-size:${fontSize}`);
@@ -25,6 +26,9 @@ function getAllowedStyle(element) {
     if (letterSpacing === 'normal' || (numericSpacing >= -2 && numericSpacing <= 10)) {
       styles.push(`letter-spacing:${letterSpacing}`);
     }
+  }
+  if (/^(?:1|1\.\d{1,2}|2(?:\.0{1,2})?)$/.test(lineHeight)) {
+    styles.push(`line-height:${lineHeight}`);
   }
 
   return styles.join(';');
@@ -49,6 +53,16 @@ function appendSanitizedNode(sourceNode, targetParent, documentNode) {
   }
 
   const safeElement = documentNode.createElement(tagName);
+  if (tagName === 'img') {
+    const source = sourceNode.getAttribute('src')?.trim() || '';
+    const isSafeSource = /^https:\/\//i.test(source) || /^\/(?!\/)/.test(source);
+    if (!isSafeSource) return;
+    safeElement.setAttribute('src', source);
+    safeElement.setAttribute('alt', (sourceNode.getAttribute('alt') || '').slice(0, 300));
+    targetParent.appendChild(safeElement);
+    return;
+  }
+
   const safeStyle = getAllowedStyle(sourceNode);
   if (safeStyle) safeElement.setAttribute('style', safeStyle);
 
@@ -58,7 +72,7 @@ function appendSanitizedNode(sourceNode, targetParent, documentNode) {
   targetParent.appendChild(safeElement);
 }
 
-export function sanitizeMagazineContent(content) {
+export function sanitizeRichContent(content) {
   if (typeof content !== 'string' || !content) return '';
 
   const parsedDocument = new DOMParser().parseFromString(content, 'text/html');
